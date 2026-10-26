@@ -1,0 +1,94 @@
+# PROPOSTA de CI — nao instalada. Para ligar, copie este arquivo para
+# .github/workflows/build.yml no repositorio publico novo.
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  release:
+    types: [published]
+
+jobs:
+  lint-and-build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Empacotar o .xpi
+        run: scripts/build.sh
+
+      # O addons-linter publico (edicao JS, v10) e ferramenta do FIREFOX: ele
+      # nao entende Experiment API do Thunderbird, entao sempre reprova este
+      # .xpi. O passo roda so para registrar a saida no log do CI -- nunca
+      # para reprovar o build; por isso continue-on-error + "|| true".
+      #
+      # Achados ESPERADOS no dist/theunfound-theme.xpi de hoje (observados com
+      # a edicao JS v10), nenhum deles defeito do addon:
+      #   - MANIFEST_FIELD_PRIVILEGED em /experiment_apis ("privileged
+      #     manifest fields are only allowed in privileged extensions"):
+      #     regra de extensao privilegiada do Firefox. Mail experiment e
+      #     privilegiado por definicao na ATN, que roda o linter dela com a
+      #     configuracao do Thunderbird.
+      #   - 4x UNSUPPORTED_API: as quatro funcoes do namespace unfoundTheme
+      #     (configure, getLayoutState, applyRecommendedLayout, getAccounts).
+      #     O linter do Firefox nao conhece o schema do experimento.
+      #   - MISSING_DATA_COLLECTION_PERMISSIONS: data_collection_permissions
+      #     NAO foi declarado de proposito -- esta desativado no Thunderbird e
+      #     pode ser recusado como campo reservado; o addon nao coleta nada.
+      #   - STRICT_MAX_VERSION "not required": no Firefox e dispensavel, mas o
+      #     Thunderbird EXIGE strict_max_version para mail experiments (o
+      #     proprio scripts/build.sh recusa empacotar sem ele).
+      # Se aparecer qualquer coisa fora dessa lista, ai sim e para olhar.
+      - name: addons-linter (informativo, nao bloqueia)
+        continue-on-error: true
+        run: npx --yes addons-linter@10 dist/theunfound-theme.xpi || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: theunfound-theme-xpi
+          path: dist/theunfound-theme.xpi
+
+      - name: Anexar o .xpi ao release
+        if: github.event_name == 'release'
+        run: gh release upload "$GITHUB_REF_NAME" dist/theunfound-theme.xpi
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+  # OPCIONAL / segunda fase: o harness do tools/ em headless.
+  # O tbctl.py ja sobe o Thunderbird com MOZ_HEADLESS=1 e --headless, entao
+  # nao precisa de xvfb. Falta so o binario e um user.js de perfil.
+  smoke-marionette:
+    runs-on: ubuntu-24.04
+    if: false   # ligue quando o passo de perfil estiver no repo
+    steps:
+      - uses: actions/checkout@v4
+
+      # strict_max_version do manifest e "158.*": o smoke roda na 158, a maior
+      # versao suportada. Ao subir o teto do manifest, suba tambem esta URL.
+      - name: Baixar o Thunderbird 158 (tarball oficial, sem snap/flatpak)
+        run: |
+          set -euo pipefail
+          curl -fsSL -o tb.tar.xz \
+            "https://download.mozilla.org/?product=thunderbird-158.0-SSL&os=linux64&lang=en-US"
+          mkdir -p "$RUNNER_TEMP/tb" && tar -xJf tb.tar.xz -C "$RUNNER_TEMP/tb" --strip-components=1
+          echo "TB_BIN=$RUNNER_TEMP/tb/thunderbird" >> "$GITHUB_ENV"
+
+      - name: Perfil de dev
+        run: |
+          mkdir -p .dev-profile
+          cp tools/dev-profile-user.js .dev-profile/user.js   # arquivo a criar (hoje so existe no disco do autor)
+
+      - name: Subir, semear e diagnosticar
+        run: |
+          tools/dev.sh start
+          python3 tools/tbctl.py exec --port 2850 --file tools/seed-profile.js
+          tools/dev.sh reload
+          python3 tools/tbctl.py exec --port 2850 --file tools/dev-check.js
+          tools/dev.sh stop
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tb-log
+          path: .dev-profile/tb.log

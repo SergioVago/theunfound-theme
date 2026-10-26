@@ -1,0 +1,327 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, you can obtain one at http://mozilla.org/MPL/2.0/. */
+
+/* about:message — cabeçalho e moldura do painel de leitura (também usado na
+ * janela de mensagem avulsa e em mensagens abertas em aba). */
+
+@import url("tokens.css");
+
+:root[unf-ui] {
+  --recipient-avatar-size: 40px;
+  --recipient-avatar-placeholder-size: 18px;
+  --recipient-avatar-margin-block-start: 0;
+  --message-header-label-opacity: 1;
+
+  font-family: var(--unf-font);
+}
+
+:root[unf-ui] :is(#messagepanebox, #singleMessage, #msgHeaderView) {
+  background-color: var(--unf-surface);
+  color: var(--unf-text);
+}
+
+/* ---------- Cabeçalho ---------- */
+
+:root[unf-ui] #messageHeader {
+  padding: 20px 24px 14px;
+  row-gap: 8px;
+  border-block-end: 1px solid var(--unf-border);
+}
+
+/*
+ * Reorganiza o cabeçalho em grade, no arranjo abaixo:
+ *   [assunto ............................] [ações]
+ *   [avatar  remetente  e-mail ..........] [data ]
+ *   [para / cc / ... ............................]
+ * Os contêineres intermediários viram "display: contents" para que os filhos
+ * participem da grade; a ordem no DOM (e a navegação por teclado) não muda.
+ */
+:root[unf-ui] #messageHeader {
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 16px;
+
+  & > * {
+    grid-column: 1 / -1;
+  }
+
+  & > #headerSenderToolbarContainer,
+  & > #expandedtoRow:not([hidden]) {
+    display: contents;
+  }
+
+  & #headerSubjectSecurityContainer {
+    grid-row: 1;
+    grid-column: 1;
+    margin-block-end: 6px;
+  }
+
+  & #header-view-toolbox {
+    grid-row: 1;
+    grid-column: 2;
+    align-self: start;
+    flex-wrap: nowrap;
+  }
+
+  & #expandedfromRow {
+    grid-row: 2;
+    grid-column: 1;
+    min-inline-size: 0;
+  }
+
+  & #expandedtoRow > .message-header-datetime {
+    grid-row: 2;
+    grid-column: 2;
+    align-self: center;
+    justify-self: end;
+    margin: 0;
+  }
+
+  & #expandedtoRow > .header-row-grow {
+    grid-row: 3;
+    grid-column: 1 / -1;
+    display: flex;
+  }
+}
+
+/* Ações só com ícone (o nome continua na dica de ferramenta). */
+:root[unf-ui] #header-view-toolbox .message-header-view-button .toolbarbutton-text {
+  display: none;
+}
+
+:root[unf-ui] #messageHeader #expandedsubjectBox {
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  color: var(--unf-text);
+}
+
+:root[unf-ui] #headerSenderToolbarContainer {
+  row-gap: 6px;
+}
+
+/* Remetente: avatar grande + nome em negrito + endereço em cinza. */
+:root[unf-ui] #expandedfromBox {
+  & .header-recipient {
+    border-radius: var(--unf-radius-sm);
+    padding-inline-end: 4px;
+
+    &:hover {
+      background-color: var(--unf-hover);
+    }
+  }
+
+  & .recipient-avatar {
+    margin-inline-end: 10px;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 650;
+    letter-spacing: 0.02em;
+
+    /* !important: o addon "Auto Profile Picture" pinta a própria cor de
+     * iniciais em estilo inline; aqui fica sempre o círculo colorido do tema. */
+    &:not(.has-avatar) {
+      background: light-dark(
+        oklch(0.7 0.115 var(--unf-avatar-hue, 250)),
+        oklch(0.55 0.1 var(--unf-avatar-hue, 250))
+      ) !important;
+    }
+
+    &.has-avatar {
+      background: #ffffff !important;
+      box-shadow: inset 0 0 0 1px light-dark(rgb(0 0 0 / 0.06), rgb(255 255 255 / 0.08));
+    }
+
+    & :is(img, canvas, .autoprofilepicture-item) {
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    & .contactInitials {
+      color: #ffffff;
+      background: none;
+    }
+  }
+
+  & .recipient-multi-line-name {
+    font-size: 1.02rem;
+    font-weight: 650;
+    color: var(--unf-text);
+  }
+
+  & .recipient-multi-line-address {
+    font-size: 0.88rem;
+    color: var(--unf-text-3);
+    opacity: 1;
+  }
+
+  & .recipient-single-line {
+    font-weight: 600;
+  }
+}
+
+/* Linhas Para/Cc etc. */
+:root[unf-ui] #messageHeader {
+  & .message-header-row:not(#headerSenderToolbarContainer, #headerSubjectSecurityContainer) {
+    font-size: 0.9rem;
+    color: var(--unf-text-2);
+  }
+
+  & .row-heading,
+  & .message-header-label {
+    color: var(--unf-text-3);
+    font-weight: 500;
+    opacity: 1;
+  }
+
+  & .message-header-datetime {
+    color: var(--unf-text-3);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  & .header-recipient:not(#expandedfromBox *) {
+    border-radius: 6px;
+    padding-inline: 3px;
+
+    &:hover {
+      background-color: var(--unf-hover);
+    }
+  }
+}
+
+/* Botões de ação: discretos, sem borda, cantos arredondados. */
+:root[unf-ui] #header-view-toolbox {
+  gap: 2px;
+
+  & .message-header-view-button,
+  & .message-header-view-button > .toolbarbutton-menubutton-button,
+  & .message-header-view-button > .toolbarbutton-menubutton-dropmarker {
+    border-color: transparent !important;
+    background-color: transparent;
+    border-radius: 7px;
+    color: var(--unf-text-2);
+    padding-block: 3px;
+  }
+
+  & .message-header-view-button:not([disabled]):hover,
+  & .message-header-view-button:not([disabled]) > :is(.toolbarbutton-menubutton-button, .toolbarbutton-menubutton-dropmarker):hover {
+    background-color: var(--unf-pressed);
+    color: var(--unf-text);
+  }
+}
+
+:root[unf-ui] button.email-action-flagged {
+  border-radius: 7px;
+
+  &:hover {
+    background-color: var(--unf-pressed);
+  }
+}
+
+:root[unf-ui] .tag {
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 0.8rem;
+}
+
+/* ---------- Corpo e anexos ---------- */
+
+:root[unf-ui] browser#messagepane {
+  background-color: var(--unf-surface);
+}
+
+:root[unf-ui] #attachmentView {
+  background-color: var(--unf-surface);
+}
+
+:root[unf-ui] #attachmentBar {
+  margin: 6px 12px 10px;
+  padding: 4px 6px;
+  border: 1px solid var(--unf-border);
+  border-radius: var(--unf-radius);
+  background-color: var(--unf-surface-2);
+  color: var(--unf-text-2);
+
+  & #attachmentName {
+    color: var(--unf-text);
+    font-weight: 600;
+  }
+
+  & #attachmentSize {
+    color: var(--unf-text-3);
+  }
+}
+
+:root[unf-ui] #attachment-splitter {
+  border-color: transparent;
+}
+
+:root[unf-ui] #attachmentList {
+  background-color: var(--unf-surface);
+}
+
+:root[unf-ui] #mail-notification-top {
+  background-color: var(--unf-surface);
+}
+
+/* ---------- Remetente: nome inteligente ----------
+ * Classes postas pelo messageDecorator em cada remetente do cabeçalho:
+ * .unf-known / .unf-unknown / .unf-suspicious. */
+:root[unf-ui][unf-sender="name"] #expandedfromBox .recipient-multi-line-address,
+:root[unf-ui][unf-sender="smart"] #expandedfromBox .unf-known .recipient-multi-line-address {
+  display: none;
+}
+
+:root[unf-ui]:not([unf-sender="name"]) #expandedfromBox .unf-suspicious {
+  & .recipient-multi-line-address {
+    color: var(--unf-warning);
+    font-weight: 600;
+  }
+
+  & .recipient-avatar {
+    box-shadow: 0 0 0 2px var(--unf-surface), 0 0 0 4px var(--unf-warning-icon);
+  }
+
+  /* Foto/logo de um remetente suspeito não é confiável: troca por um alerta. */
+  & .recipient-avatar.has-avatar {
+    background: var(--unf-warning-soft) var(--icon-warning) center / 50% no-repeat !important;
+    -moz-context-properties: fill, stroke;
+    fill: color-mix(in srgb, var(--unf-warning-icon) 25%, transparent);
+    stroke: var(--unf-warning-icon);
+
+    & > * {
+      visibility: hidden;
+    }
+  }
+}
+
+:root[unf-ui]:not([unf-sender="name"]) #expandedfromBox .unf-sender-badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  gap: 4px;
+  margin-inline: 8px 2px;
+  padding: 2px 8px 2px 6px;
+  border-radius: 999px;
+  background-color: var(--unf-warning-soft);
+  color: var(--unf-warning);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+
+  &::before {
+    content: "";
+    inline-size: 13px;
+    block-size: 13px;
+    background-image: var(--icon-warning);
+    background-size: contain;
+    background-repeat: no-repeat;
+    -moz-context-properties: fill, stroke;
+    fill: color-mix(in srgb, var(--unf-warning-icon) 25%, transparent);
+    stroke: var(--unf-warning-icon);
+  }
+}

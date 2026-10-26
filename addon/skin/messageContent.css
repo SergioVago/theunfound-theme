@@ -1,0 +1,24 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, you can obtain one at http://mozilla.org/MPL/2.0/. */
+
+/* Corpo da mensagem (documento exibido dentro do painel de leitura).
+ * Só ajusta o respiro e, se a opção estiver ligada, troca a fonte
+ * monoespaçada das mensagens de texto simples por uma proporcional.
+ * E-mails em HTML mantêm o próprio estilo. */
+
+:root[unf-ui] body {
+  margin: 0;
+  padding: 18px 24px 32px;
+}
+
+:root[unf-ui][unf-proportional] :is(.moz-text-plain, .moz-text-flowed) {
+  font-family: "Adwaita Sans", "Inter Variable", "Inter", system-ui, sans-serif !important;
+  font-size: 14.5px !important;
+  line-height: 1.6;
+}
+
+:root[unf-ui] :is(.moz-text-plain, .moz-text-flowed) blockquote[type="cite"] {
+  border-inline-start-width: 2px;
+  padding-inline-start: 12px;
+}

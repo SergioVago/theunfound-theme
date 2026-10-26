@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="light dark">
+  <title>theUnfound Theme — Opções</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <section>
+      <h2>Tema</h2>
+      <div class="segmented" role="radiogroup" aria-label="Tema">
+        <label><input type="radio" name="theme" value="auto"> <span>Automático</span></label>
+        <label><input type="radio" name="theme" value="light"> <span>Claro</span></label>
+        <label><input type="radio" name="theme" value="dark"> <span>Escuro</span></label>
+      </div>
+      <p class="hint">“Automático” segue o tema do Thunderbird/sistema.</p>
+    </section>
+
+    <section>
+      <h2>Barra lateral</h2>
+      <label class="row">
+        <input type="checkbox" id="darkSidebar">
+        <span>Barra lateral escura (barra de áreas e pastas em grafite)</span>
+      </label>
+      <p class="hint">A lista de mensagens, a leitura e a barra superior continuam no tema
+        escolhido acima. O botão
+        <svg class="kbd-icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.65" y="2.15" width="12.7" height="11.7" rx="2.3"/><path d="M5.9 2.4v11.2"/><path d="M11.2 6 9.2 8l2 2"/></svg>
+        no topo do painel de pastas recolhe o painel e deixa só as fotos das contas.</p>
+    </section>
+
+    <section>
+      <h2>Contas</h2>
+      <p class="hint hint-top">Foto de cada conta no painel recolhido. Sem imagem escolhida, vale a
+        foto do contato com o mesmo e-mail no catálogo de endereços ou, sem ela, as iniciais.</p>
+      <ul id="accounts" class="accounts" aria-label="Contas"></ul>
+      <p id="accountsStatus" class="hint" role="status"></p>
+    </section>
+
+    <section>
+      <h2>Lista de mensagens</h2>
+      <label class="row">
+        <input type="checkbox" id="avatars">
+        <span>Avatares com iniciais (ou foto do catálogo de endereços)</span>
+      </label>
+      <label class="row">
+        <input type="checkbox" id="previews">
+        <span>Linha de prévia do conteúdo</span>
+      </label>
+    </section>
+
+    <section>
+      <h2>Remetente</h2>
+      <div class="choices" role="radiogroup" aria-label="Como mostrar o remetente">
+        <label class="choice">
+          <input type="radio" name="senderDisplay" value="smart">
+          <span>
+            <strong>Nome inteligente</strong> <em class="tag">recomendado</em>
+            <small>Contatos conhecidos aparecem só pelo nome. Desconhecidos ganham
+              o domínio ao lado (ex.: “Monitor Exemplo · exemplo.com”).
+              Remetentes suspeitos mostram o endereço completo e um alerta.</small>
+          </span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="senderDisplay" value="full">
+          <span>
+            <strong>Sempre nome e endereço</strong>
+            <small>Mostra “Nome &lt;endereço&gt;” para todos, com alerta nos suspeitos.</small>
+          </span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="senderDisplay" value="name">
+          <span>
+            <strong>Só o nome (sem proteção)</strong>
+            <small>Visual mais limpo, mas um golpista pode usar qualquer nome. Sem alertas.</small>
+          </span>
+        </label>
+      </div>
+      <p class="hint">O endereço completo fica sempre na dica ao passar o mouse sobre o remetente.</p>
+    </section>
+
+    <section>
+      <h2>Leitura</h2>
+      <label class="row">
+        <input type="checkbox" id="proportionalPlainText">
+        <span>Fonte proporcional em mensagens de texto simples</span>
+      </label>
+    </section>
+
+    <section>
+      <h2>Layout</h2>
+      <p id="layoutStatus" class="hint"></p>
+      <button type="button" id="applyLayout">Usar cartões e 3 colunas</button>
+    </section>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>

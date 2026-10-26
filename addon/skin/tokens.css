@@ -1,0 +1,134 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+/*
+ * Paleta e medidas do theUnfound Theme, compartilhadas por todas as folhas.
+ * Todas as cores usam light-dark(), então seguem o color-scheme do documento
+ * (que o addon pode forçar para claro/escuro pela página de opções).
+ */
+
+:root[unf-ui] {
+  --unf-font: "Adwaita Sans", "Inter Variable", "Inter", system-ui, sans-serif;
+
+  --unf-accent: light-dark(#0a6cff, #4d95ff);
+  --unf-accent-hover: light-dark(#005ce6, #69a6ff);
+  --unf-accent-text: light-dark(#0059d6, #8bbaff);
+  --unf-accent-contrast: #ffffff;
+  /* Fundo de botões cheios: no escuro um azul mais fechado mantém o contraste
+   * do texto branco. */
+  --unf-accent-fill: light-dark(#0a6cff, #2f7bf0);
+  --unf-accent-fill-hover: light-dark(#005ce6, #4a8cf5);
+  --unf-accent-soft: light-dark(#e1ecff, rgb(77 149 255 / 0.2));
+  --unf-accent-softer: light-dark(#eef4ff, rgb(77 149 255 / 0.12));
+  --unf-unread: light-dark(#1a84ff, #4d95ff);
+
+  /* Alerta de remetente suspeito (âmbar). */
+  --unf-warning: light-dark(#b45309, #fbbf24);
+  --unf-warning-icon: light-dark(#d97706, #f59e0b);
+  --unf-warning-soft: light-dark(#fff3dc, rgb(245 158 11 / 0.16));
+
+  --unf-rail: light-dark(#e2e7ee, #0f1013);
+  --unf-sidebar: light-dark(#eef1f5, #17181b);
+  --unf-surface: light-dark(#ffffff, #1e1f23);
+  --unf-surface-2: light-dark(#f5f7fa, #24262a);
+  --unf-surface-3: light-dark(#eaeef3, #2c2e33);
+  --unf-field: light-dark(#ffffff, #2a2c31);
+  --unf-border: light-dark(#e4e8ed, #2b2d32);
+  --unf-border-strong: light-dark(#d2d8e0, #3b3e45);
+
+  --unf-text: light-dark(#16181b, #e9ebee);
+  --unf-text-2: light-dark(#4d5561, #b4bac3);
+  --unf-text-3: light-dark(#7c8592, #858d98);
+  --unf-icon: light-dark(#5b6470, #a2a9b3);
+
+  --unf-hover: light-dark(rgb(22 44 84 / 0.05), rgb(255 255 255 / 0.06));
+  --unf-pressed: light-dark(rgb(22 44 84 / 0.09), rgb(255 255 255 / 0.1));
+  --unf-shadow-sm: 0 1px 2px light-dark(rgb(16 24 40 / 0.07), rgb(0 0 0 / 0.45));
+  --unf-shadow-md: 0 6px 20px light-dark(rgb(16 24 40 / 0.1), rgb(0 0 0 / 0.55));
+
+  --unf-radius-sm: 6px;
+  --unf-radius: 9px;
+  --unf-radius-lg: 13px;
+
+  /* Tokens do próprio Thunderbird remapeados para a paleta do tema: o que o
+   * addon não estiliza direto herda as mesmas cores. */
+  --layout-background-0: var(--unf-surface);
+  --layout-background-1: var(--unf-surface-2);
+  --layout-color-0: var(--unf-text);
+  --layout-color-1: var(--unf-text);
+  --layout-color-2: var(--unf-text-2);
+  --layout-color-3: var(--unf-text-3);
+  --layout-border-0: var(--unf-border);
+  --layout-border-1: var(--unf-border-strong);
+  --color-text-base: var(--unf-text);
+
+  --selected-item-color: var(--unf-accent);
+  --selected-item-text-color: var(--unf-accent-contrast);
+  --sidebar-background-color: var(--unf-sidebar);
+  --sidebar-text-color: var(--unf-text);
+  --sidebar-border-color: var(--unf-border);
+  --chrome-content-separator-color: var(--unf-border);
+  --primary: var(--unf-accent);
+  --focus-outline-color: var(--unf-accent);
+  --link-color: var(--unf-accent-text);
+  --new-folder-color: var(--unf-accent-text);
+
+  --button-border-radius: 8px;
+  --button-background-color: var(--unf-surface);
+  --button-hover-background-color: var(--unf-surface-3);
+  --button-active-background-color: var(--unf-border-strong);
+  --button-border-color: var(--unf-border-strong);
+  --button-primary-background-color: var(--unf-accent-fill);
+  --button-primary-hover-background-color: var(--unf-accent-fill-hover);
+  --button-primary-active-background-color: var(--unf-accent-fill-hover);
+  --button-primary-border-color: transparent;
+  --button-primary-text-color: var(--unf-accent-contrast);
+
+  --toolbar-field-background-color: var(--unf-field);
+  --toolbar-field-border-color: var(--unf-border-strong);
+  --toolbar-field-focus-border-color: var(--unf-accent);
+  --toolbarbutton-icon-fill-opacity: 1;
+  --toolbar-button-hover-background-color: var(--unf-hover);
+  --toolbar-button-hover-border-color: transparent;
+  --toolbar-button-active-background-color: var(--unf-pressed);
+  --toolbar-button-active-border-color: transparent;
+  --toolbarbutton-background-color-hover: var(--unf-hover);
+  --toolbarbutton-hover-bordercolor: transparent;
+  --toolbarbutton-header-bordercolor: transparent;
+  --toolbarbutton-active-bordercolor: transparent;
+  --toolbarbutton-background-color-active: var(--unf-pressed);
+
+  --search-bar-color: var(--unf-text);
+  --search-bar-border-color: transparent;
+  --search-bar-background: var(--unf-surface-3);
+  --search-bar-focus-background: var(--unf-field);
+  --search-field-placeholder: var(--unf-text-3);
+
+  /* Ícones de pasta monocromáticos: sem as cores por tipo de pasta, a lista
+   * fica calma e o destaque sobra para o não lido. */
+  --folder-color-folder: var(--unf-icon);
+  --folder-color-inbox: var(--unf-icon);
+  --folder-color-sent: var(--unf-icon);
+  --folder-color-outbox: var(--unf-icon);
+  --folder-color-draft: var(--unf-icon);
+  --folder-color-trash: var(--unf-icon);
+  --folder-color-archive: var(--unf-icon);
+  --folder-color-template: var(--unf-icon);
+  --folder-color-spam: var(--unf-icon);
+  --folder-color-folder-filter: var(--unf-icon);
+  --folder-color-rss: var(--unf-icon);
+  --folder-color-newsletter: var(--unf-icon);
+
+  & :is(menupopup, panel):not(.autoscroller) {
+    --panel-background-color: var(--unf-surface);
+    --panel-border-color: var(--unf-border-strong);
+    --panel-border-radius: 10px;
+  }
+
+  @media (prefers-contrast) {
+    /* Alto contraste: devolve o controle das cores ao Thunderbird/sistema. */
+    --selected-item-color: SelectedItem;
+    --selected-item-text-color: SelectedItemText;
+  }
+}

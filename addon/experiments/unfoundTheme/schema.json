@@ -1,0 +1,84 @@
+[
+  {
+    "namespace": "unfoundTheme",
+    "description": "Injeta o visual do tema nas janelas do Thunderbird.",
+    "types": [
+      {
+        "id": "Options",
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": ["auto", "light", "dark"],
+            "optional": true
+          },
+          "avatars": { "type": "boolean", "optional": true },
+          "previews": { "type": "boolean", "optional": true },
+          "senderDisplay": {
+            "type": "string",
+            "enum": ["smart", "full", "name"],
+            "optional": true
+          },
+          "proportionalPlainText": { "type": "boolean", "optional": true },
+          "darkSidebar": { "type": "boolean", "optional": true },
+          "accountPhotos": {
+            "type": "object",
+            "description": "Foto escolhida para cada conta (chave da conta → data: URL).",
+            "additionalProperties": { "type": "string" },
+            "optional": true
+          }
+        }
+      },
+      {
+        "id": "AccountInfo",
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "fullName": { "type": "string" },
+          "addressBookPhoto": { "type": "string" }
+        }
+      },
+      {
+        "id": "LayoutState",
+        "type": "object",
+        "properties": {
+          "cardsView": { "type": "boolean" },
+          "verticalLayout": { "type": "boolean" },
+          "threeLineCards": { "type": "boolean" }
+        }
+      }
+    ],
+    "functions": [
+      {
+        "name": "configure",
+        "type": "function",
+        "async": true,
+        "description": "Aplica (ou reaplica) o visual com as opções informadas.",
+        "parameters": [{ "name": "options", "$ref": "Options" }]
+      },
+      {
+        "name": "getLayoutState",
+        "type": "function",
+        "async": true,
+        "description": "Informa se a visualização em cartões e o layout vertical estão ativos.",
+        "parameters": []
+      },
+      {
+        "name": "applyRecommendedLayout",
+        "type": "function",
+        "async": true,
+        "description": "Ativa a visualização em cartões (3 linhas) e o layout vertical de 3 colunas.",
+        "parameters": []
+      },
+      {
+        "name": "getAccounts",
+        "type": "function",
+        "async": true,
+        "description": "Lista as contas de e-mail mostradas no trilho de contas, com a foto do catálogo de endereços (se houver).",
+        "parameters": []
+      }
+    ]
+  }
+]

@@ -1,0 +1,124 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+/* Janela de composição (messengercompose.xhtml): só a moldura — barras,
+ * campos de cabeçalho e barra de formatação. O corpo do e-mail não muda. */
+
+@import url("tokens.css");
+
+:root[unf-ui] {
+  font-family: var(--unf-font);
+  background-color: var(--unf-surface);
+  color: var(--unf-text);
+}
+
+/* Barra de ferramentas superior */
+:root[unf-ui] #compose-toolbox {
+  background-color: var(--unf-sidebar);
+  border-block-end: 1px solid var(--unf-border);
+
+  & toolbar {
+    background-color: transparent;
+    border: none;
+  }
+
+  & toolbarbutton {
+    border-radius: var(--unf-radius-sm);
+    border-color: transparent !important;
+  }
+
+  & toolbarseparator {
+    opacity: 0.5;
+  }
+}
+
+:root[unf-ui] #button-send {
+  background-color: var(--unf-accent-fill) !important;
+  color: var(--unf-accent-contrast) !important;
+  border-radius: var(--unf-radius) !important;
+  padding-inline: 10px 12px;
+  font-weight: 600;
+  fill: transparent;
+  stroke: currentColor;
+
+  &:not([disabled]):hover {
+    background-color: var(--unf-accent-fill-hover) !important;
+  }
+}
+
+/* Cabeçalhos: De / Para / Assunto */
+:root[unf-ui] #MsgHeadersToolbar {
+  background-color: var(--unf-surface);
+  color: var(--unf-text);
+  padding-inline: 8px;
+  border-block-end: 1px solid var(--unf-border);
+
+  & label:not(.pill-label) {
+    color: var(--unf-text-3);
+  }
+}
+
+:root[unf-ui] #MsgHeadersToolbar :is(.address-container, .input-container, #msgIdentity) {
+  border-color: transparent;
+  border-radius: var(--unf-radius-sm);
+  background-color: var(--unf-surface-2);
+
+  &:focus-within {
+    background-color: var(--unf-field);
+    outline: 2px solid var(--unf-accent);
+    outline-offset: -2px;
+  }
+}
+
+:root[unf-ui] #msgSubject {
+  font-weight: 600;
+}
+
+:root[unf-ui] #MsgHeadersToolbar :is(.address-container, .input-container) :is(input, .address-input) {
+  background-color: transparent;
+}
+
+:root[unf-ui] #MsgHeadersToolbar .address-container[focused="true"] {
+  background-color: var(--unf-field);
+  outline: 2px solid var(--unf-accent);
+  outline-offset: -2px;
+}
+
+:root[unf-ui] .address-pill {
+  border-radius: 999px;
+  background-color: var(--unf-accent-soft);
+  color: var(--unf-text);
+  padding-inline: 9px;
+
+  &[selected] {
+    background-color: var(--unf-accent-fill);
+    color: var(--unf-accent-contrast);
+  }
+}
+
+/* Barra de formatação */
+:root[unf-ui] #FormatToolbox,
+:root[unf-ui] #FormatToolbar {
+  background-color: var(--unf-surface);
+  border-color: var(--unf-border);
+}
+
+:root[unf-ui] #FormatToolbar {
+  & toolbarbutton,
+  & menulist {
+    border-radius: var(--unf-radius-sm);
+  }
+
+  & toolbarseparator {
+    opacity: 0.5;
+  }
+}
+
+/* Barra de status */
+:root[unf-ui] #compose-toolbox ~ * #status-bar,
+:root[unf-ui] #status-bar {
+  background-color: var(--unf-sidebar);
+  color: var(--unf-text-3);
+  border-block-start: 1px solid var(--unf-border);
+}

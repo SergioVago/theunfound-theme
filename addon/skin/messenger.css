@@ -1,0 +1,193 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+/* Janela principal (messenger.xhtml) e janela de mensagem avulsa:
+ * barra de áreas, barra unificada, abas e barra de status. */
+
+@import url("tokens.css");
+
+:root[unf-ui] {
+  --spaces-bg-color: var(--unf-rail);
+  --spaces-bg-image: none;
+  --spaces-button-text-color: var(--unf-icon);
+  --spaces-button-active-bg-color: var(--unf-accent-fill);
+  --spaces-button-active-text-color: var(--unf-accent-contrast);
+  --spaces-button-badge-bg-color: var(--unf-unread);
+  --spaces-button-padding: 6px;
+  --spaces-padding: 8px;
+  --spaces-gap: 10px;
+  --spaces-container-gap: 10px;
+  --messenger-body-border: 0px;
+
+  --tabs-toolbar-background-color: var(--unf-sidebar);
+  --tabs-toolbar-box-shadow: none;
+  --tab-selected-bgcolor: var(--unf-surface);
+  --toolbar-bgcolor: var(--unf-sidebar);
+  --toolbar-background-color: var(--unf-sidebar);
+  --toolbar-text-color: var(--unf-text);
+  --toolbox-background-color: var(--unf-sidebar);
+  --toolbox-background-color-inactive: var(--unf-sidebar);
+  --toolbox-text-color: var(--unf-text);
+  --toolbox-text-color-inactive: var(--unf-text-2);
+  --toolbarseparator-color: var(--unf-border);
+
+  font-family: var(--unf-font);
+  background-color: var(--unf-sidebar);
+  color: var(--unf-text);
+}
+
+/* ---------- Barra de áreas (trilho à esquerda) ---------- */
+
+:root[unf-ui] .spaces-toolbar:not([hidden]) {
+  background-color: var(--unf-rail);
+  border-inline-end: none;
+}
+
+:root[unf-ui] .spaces-toolbar-button {
+  border-radius: 10px;
+
+  &:not(.current) {
+    color: var(--unf-icon);
+  }
+
+  &:hover:not(.current) {
+    background-color: var(--unf-pressed);
+    color: var(--unf-text);
+  }
+
+  &.current {
+    color: var(--spaces-button-active-text-color);
+    box-shadow: 0 2px 6px light-dark(rgb(10 108 255 / 0.35), rgb(0 0 0 / 0.5));
+
+    & img {
+      fill: color-mix(in srgb, currentColor 25%, transparent);
+    }
+  }
+
+  & .spaces-badge-container {
+    border-radius: 999px;
+    font-weight: 700;
+  }
+}
+
+/* ---------- Barra unificada (topo) ---------- */
+
+:root[unf-ui] #navigation-toolbox {
+  background-color: var(--unf-sidebar);
+  color: var(--unf-text);
+  border-block-end: none;
+}
+
+/* Sem borda inferior: barra superior e barra lateral formam uma moldura só,
+ * e a lista + leitura aparecem como uma "folha" branca encaixada nela. */
+:root[unf-ui] unified-toolbar {
+  background-color: var(--unf-sidebar);
+  color: var(--unf-text);
+  border-block-end: none;
+}
+
+:root[unf-ui] #unifiedToolbarContent {
+  gap: 4px;
+
+  & .unified-toolbar-button,
+  & .toolbar-button {
+    border-radius: var(--unf-radius-sm);
+    border-color: transparent;
+    background-color: transparent;
+    color: var(--unf-text-2);
+
+    &:not([disabled]):hover {
+      background-color: var(--unf-pressed);
+      color: var(--unf-text);
+    }
+  }
+
+  & .search-bar {
+    flex: 0 1 560px;
+    margin-inline: auto;
+  }
+}
+
+:root[unf-ui] :is(global-search-bar, search-bar) {
+  --button-border-radius: 10px;
+  --search-padding: 8px;
+  --search-bar-border-color: transparent;
+  --search-bar-background: light-dark(rgb(255 255 255 / 0.85), rgb(255 255 255 / 0.07));
+  --search-bar-focus-background: var(--unf-field);
+  --focus-outline-color: var(--unf-accent);
+  --search-outline-offset: 0;
+  color: var(--unf-text-2);
+  font-size: 0.95rem;
+  border-radius: 10px;
+  box-shadow: var(--unf-shadow-sm);
+}
+
+:root[unf-ui] :is(global-search-bar, search-bar) .kbd-container kbd {
+  border: none;
+  border-radius: 4px;
+  background-color: var(--unf-surface-3);
+  color: var(--unf-text-3);
+  box-shadow: none;
+}
+
+/* ---------- Abas ---------- */
+
+:root[unf-ui] #tabs-toolbar {
+  background-color: var(--unf-sidebar);
+  border-block-end: 1px solid var(--unf-border);
+}
+
+:root[unf-ui] .tabmail-tab {
+  border-radius: 8px 8px 0 0;
+
+  &:not([selected]) {
+    color: var(--unf-text-2);
+  }
+
+  &[selected] {
+    background-color: var(--unf-surface);
+    color: var(--unf-text);
+  }
+
+  & .tab-line {
+    display: none;
+  }
+}
+
+/* ---------- Barra de status ---------- */
+
+:root[unf-ui] #status-bar {
+  background-color: var(--unf-sidebar);
+  color: var(--unf-text-3);
+  border-block-start: 1px solid var(--unf-border);
+  font-size: 0.85rem;
+}
+
+/* ---------- Janela de mensagem avulsa ---------- */
+
+:root[unf-ui] #mail-toolbox {
+  background-color: var(--unf-sidebar);
+  color: var(--unf-text);
+  border-block-end: 1px solid var(--unf-border);
+
+  & toolbar {
+    background-color: transparent;
+    border: none;
+  }
+
+  & toolbarbutton {
+    border-radius: var(--unf-radius-sm);
+  }
+}
+
+:root[unf-ui][windowtype="mail:messageWindow"] #messageBrowser {
+  background-color: var(--unf-surface);
+}
+
+/* ---------- Menus e painéis ---------- */
+
+:root[unf-ui] :is(menupopup, panel) {
+  --panel-shadow-margin: 6px;
+  --menuitem-border-radius: 6px;
+}

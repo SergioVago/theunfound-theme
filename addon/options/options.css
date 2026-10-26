@@ -1,0 +1,274 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+:root {
+  color-scheme: light dark;
+  --accent: light-dark(#0a6cff, #4d95ff);
+  --accent-fill: light-dark(#0a6cff, #2f7bf0);
+  --text: light-dark(#16181b, #e9ebee);
+  --text-3: light-dark(#7c8592, #858d98);
+  --surface: light-dark(#ffffff, #1e1f23);
+  --surface-3: light-dark(#eaeef3, #2c2e33);
+  --border: light-dark(#e4e8ed, #2b2d32);
+  font: message-box;
+  font-family: "Adwaita Sans", "Inter Variable", "Inter", system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 12px 4px 20px;
+  color: var(--text);
+  background: transparent;
+}
+
+main {
+  display: grid;
+  gap: 18px;
+  max-inline-size: 560px;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--accent);
+  inline-size: 16px;
+  block-size: 16px;
+  margin: 0;
+}
+
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border-radius: 10px;
+  background: var(--surface-3);
+
+  & label {
+    position: relative;
+  }
+
+  & input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  & span {
+    display: block;
+    padding: 5px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  & input:checked + span {
+    background: var(--surface);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
+    font-weight: 600;
+  }
+
+  & input:focus-visible + span {
+    outline: 2px solid var(--accent);
+  }
+}
+
+.hint {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-3);
+}
+
+button {
+  margin-block-start: 8px;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 9px;
+  background: var(--accent-fill);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.choices {
+  display: grid;
+  gap: 4px;
+}
+
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+
+  &:has(input:checked) {
+    background: light-dark(#eef4ff, rgb(77 149 255 / 0.12));
+  }
+
+  & input {
+    accent-color: var(--accent);
+    margin: 3px 0 0;
+  }
+
+  & strong {
+    font-weight: 600;
+  }
+
+  & small {
+    display: block;
+    margin-block-start: 2px;
+    font-size: 0.85rem;
+    color: var(--text-3);
+  }
+
+  & .tag {
+    font-style: normal;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    margin-inline-start: 4px;
+  }
+}
+
+.hint-top {
+  margin: 0 0 8px;
+}
+
+.kbd-icon {
+  inline-size: 14px;
+  block-size: 14px;
+  vertical-align: -2px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Grade com subgrid: os botões ficam na mesma coluna em todas as contas. */
+.accounts {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  row-gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  & > .hint {
+    grid-column: 1 / -1;
+  }
+}
+
+.account {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: center;
+  column-gap: 6px;
+  padding: 8px 10px;
+  border-radius: 10px;
+
+  &:hover {
+    background: light-dark(#f5f7fa, #24262a);
+  }
+}
+
+.account-avatar {
+  display: grid;
+  place-items: center;
+  margin-inline-end: 6px;
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: light-dark(
+    oklch(0.7 0.115 var(--avatar-hue, 250)),
+    oklch(0.55 0.1 var(--avatar-hue, 250))
+  );
+  color: #fff;
+  font-weight: 650;
+  font-size: 0.9rem;
+
+  & img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+}
+
+.account-text {
+  display: grid;
+  min-inline-size: 0;
+  margin-inline-end: 6px;
+
+  & strong {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  & small {
+    font-size: 0.82rem;
+    color: var(--text-3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  & .account-source {
+    font-size: 0.76rem;
+
+    &.is-custom {
+      color: var(--accent);
+    }
+  }
+}
+
+button[hidden] {
+  display: none;
+}
+
+.account-actions {
+  display: contents;
+}
+
+button.secondary {
+  margin: 0;
+  padding: 5px 10px;
+  background: var(--surface-3);
+  color: var(--text);
+  font-weight: 500;
+
+  &:hover:not(:disabled) {
+    background: light-dark(#dde3ea, #363940);
+  }
+}
+
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
