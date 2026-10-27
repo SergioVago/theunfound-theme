@@ -12,7 +12,7 @@ público (o repositório ainda não foi criado).
 **Marca:** este texto tem **uma** menção nominativa ao Spark Mail, com atribuição à
 Readdle e declaração de não-vínculo — é uso nominativo em texto longo, o mesmo que os
 temas "Monterail ... inspired by" fazem na ATN hoje. Não acrescente outras; o resumo
-(arquivo 02) e a interface do addon não citam marca de terceiro. Ver o arquivo 01.
+(arquivo 02) e a interface do addon não citam marca de terceiro.
 
 ---
 

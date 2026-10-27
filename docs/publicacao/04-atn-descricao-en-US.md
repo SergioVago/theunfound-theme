@@ -10,7 +10,7 @@ and is public (the repository has not been created yet).
 **Trademark:** this text carries **one** nominative mention of Spark Mail, attributed to
 Readdle and followed by a disclaimer — nominative use in long-form text, the same thing
 the "Monterail ... inspired by" themes do on ATN today. Do not add more; the summary
-(file 02) and the add-on's own UI mention no third-party trademark. See file 01.
+(file 02) and the add-on's own UI mention no third-party trademark.
 
 ---
 

@@ -70,7 +70,7 @@ Checado arquivo por arquivo:
   (`data:image/svg+xml,...` em `skin/sidebar.css`) e o `icons/icon.svg`. Nada de pacote de
   ícones, nada do Thunderbird, nada da Readdle.
 - **Nada da Readdle.** Nem código, nem asset, nem recurso. A semelhança é de *aparência*,
-  implementada do zero — o que é questão de marca (tratada no arquivo 01), não de licença.
+  implementada do zero — o que é questão de marca, não de licença.
 - **O Thunderbird é MPL 2.0** e você não copiou código dele: o addon usa APIs em tempo de
   execução (`ChromeUtils.importESModule`, `MailServices`, `Services`), o que não cria obra
   derivada. Se *tiver* vindo algum seletor ou valor de folha de estilo do Thunderbird, a

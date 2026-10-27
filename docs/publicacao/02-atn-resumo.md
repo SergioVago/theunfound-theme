@@ -20,7 +20,7 @@ origem é mais fácil de fazer, e é o texto que aparece sob o nome do addon na 
 e em `about:addons`. Por isso **não há variante com a marca de terceiro aqui**: o visual é
 descrito por ele mesmo (grafite, barra lateral escura, trilho de contas recolhível,
 cartões com avatar e prévia). A menção nominativa, com atribuição à Readdle, existe **uma
-vez** em cada descrição longa (arquivos 03 e 04) — e só lá. Ver o arquivo 01, seção 2.
+vez** em cada descrição longa (arquivos 03 e 04) — e só lá.
 
 Os textos abaixo são os definitivos. Se mexer em qualquer palavra, reconte com
 `python3 -c "print(len('''...'''))"`.
@@ -62,5 +62,4 @@ ATN exige de quem usa "Thunderbird" no nome (`"<Add-on name> for Thunderbird"`) 
 pedaço do nome não é problema.
 
 > **Pendente:** o campo "Página de suporte" da ATN fica em branco até o repositório
-> público existir; depois, aponte para a URL do repo (ver arquivo 01, item 8 do
-> checklist).
+> público existir; depois, aponte para a URL do repo.

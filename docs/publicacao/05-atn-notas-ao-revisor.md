@@ -74,10 +74,12 @@ It:
     older version cannot strip the newer version's styling (this bit is documented in the
     comment at the top of the file, lines 21-30).
 
-addon/skin/*.css (2,060 lines total across 7 files: about3pane.css 736, aboutMessage.css
-327, sidebar.css 522, messenger.css 193, tokens.css 134, compose.css 124,
+addon/skin/*.css (2,091 lines total across 7 files: about3pane.css 759, aboutMessage.css
+327, sidebar.css 530, messenger.css 193, tokens.css 134, compose.css 124,
 messageContent.css 24) — plain CSS, loaded as author sheets. The only URLs in them are
-inline data:image/svg+xml icons; no @font-face, no remote resources.
+inline data:image/svg+xml icons and one relative @import url("tokens.css") at the top of
+about3pane.css, aboutMessage.css, messenger.css and compose.css; no @font-face, no
+remote resources.
 
 addon/content/threadDecorator.js (473 lines) — wraps the cards-view row builder
 (ThreadCard.prototype.fillRow, lines 374-383) to add the avatar, the preview line and the
@@ -85,10 +87,10 @@ sender formatting, and puts the original function back on shutdown. The preview 
 hdr.getStringProperty("preview") (lines 276 and 348), i.e. the snippet Thunderbird itself
 already stores in the message database; the add-on never opens or fetches a message body.
 
-addon/content/sidebarDecorator.js (1,098 lines) — builds the account rail, keeps its
+addon/content/sidebarDecorator.js (1,104 lines) — builds the account rail, keeps its
 collapsed state in Services.xulStore (lines 218 and 226 — the same place Thunderbird keeps
 window layout state) and listens to folder/unread changes through
-MailServices.mailSession.AddFolderListener (line 1020, removed at line 1067).
+MailServices.mailSession.AddFolderListener (line 1026, removed at line 1073).
 
 addon/content/messageDecorator.js (221 lines) — rearranges the about:message header and,
 for the suspicious-sender badge, reads the open message's own Authentication-Results
@@ -244,10 +246,12 @@ privilegiado:
     desligamento atrasado de uma versão antiga não apague o visual da versão nova (está
     documentado no comentário do topo do arquivo, linhas 21-30).
 
-addon/skin/*.css (2.060 linhas em 7 arquivos: about3pane.css 736, aboutMessage.css 327,
-sidebar.css 522, messenger.css 193, tokens.css 134, compose.css 124,
+addon/skin/*.css (2.091 linhas em 7 arquivos: about3pane.css 759, aboutMessage.css 327,
+sidebar.css 530, messenger.css 193, tokens.css 134, compose.css 124,
 messageContent.css 24) — CSS puro, carregado como folha de autor. As únicas URLs ali são
-ícones data:image/svg+xml embutidos; nenhum @font-face, nenhum recurso remoto.
+ícones data:image/svg+xml embutidos e um @import url("tokens.css") relativo no topo de
+about3pane.css, aboutMessage.css, messenger.css e compose.css; nenhum @font-face, nenhum
+recurso remoto.
 
 addon/content/threadDecorator.js (473 linhas) — envolve o construtor de linha da
 visualização em cartões (ThreadCard.prototype.fillRow, linhas 374-383) para acrescentar
@@ -256,10 +260,10 @@ desligamento. O texto da prévia é hdr.getStringProperty("preview") (linhas 276
 isto é, o resumo que o próprio Thunderbird já guarda no banco de mensagens; o addon nunca
 abre nem baixa corpo de mensagem.
 
-addon/content/sidebarDecorator.js (1.098 linhas) — monta o trilho de contas, guarda o
+addon/content/sidebarDecorator.js (1.104 linhas) — monta o trilho de contas, guarda o
 estado recolhido em Services.xulStore (linhas 218 e 226, o mesmo lugar onde o Thunderbird
 guarda o layout da janela) e escuta mudanças de pasta/não lidas por
-MailServices.mailSession.AddFolderListener (linha 1020, removido na linha 1067).
+MailServices.mailSession.AddFolderListener (linha 1026, removido na linha 1073).
 
 addon/content/messageDecorator.js (221 linhas) — reorganiza o cabeçalho do about:message
 e, para o selo de remetente suspeito, lê o cabeçalho Authentication-Results da própria
