@@ -886,6 +886,16 @@
     // Chord com modificador pertence ao chrome: Alt+Home é cmd_goStartPage,
     // Alt+End é ir para hoje no calendário. O orderable-tree-listbox do
     // Thunderbird faz a mesma guarda antes de navegar.
+    //
+    // shiftKey fica DE FORA de propósito, e a razão importa: "ArrowUp",
+    // "Home" e companhia são teclas nomeadas, então event.key não muda com
+    // shift e Shift+seta CASA com o switch abaixo. O que torna isso seguro é
+    // só não existir binding de chrome ali: no omni.ja do TB 158, os únicos
+    // <key> em seta/Home/End são key_goStartPage (VK_HOME), o
+    // calendar-go-to-today-key (VK_END) e os dois
+    // key_moveAttachmentBundle* da janela de composição (VK_UP/VK_DOWN),
+    // todos modifiers="alt". Se uma versão futura acrescentar um com shift,
+    // este handler passa a comê-lo e o shift entra na guarda.
     if (event.altKey || event.ctrlKey || event.metaKey) {
       return;
     }
