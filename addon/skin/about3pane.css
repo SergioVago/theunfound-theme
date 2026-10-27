@@ -259,6 +259,15 @@
       color: var(--unf-accent-text);
     }
   }
+
+  /* A árvore de pastas é multisselecionável. Com mais de uma pasta marcada o
+   * tema pinta todas com o mesmo preenchimento, então a âncora do teclado
+   * precisa de um anel próprio. Só no modo multi: com uma pasta só,
+   * .current e .selected são a mesma linha e nada muda. */
+  &.multi-selected:focus-within li.selected.current > .container {
+    outline: 2px solid var(--unf-accent);
+    outline-offset: -2px;
+  }
 }
 
 :root[unf-ui] #folderTree .folder-count-badge {
@@ -315,6 +324,20 @@
     border: none;
     border-radius: var(--unf-radius);
   }
+}
+
+/* Linha sob o cursor do teclado. O tema zera as bordas dos cartões, e fora do
+ * modo de alto contraste a borda é o único indicador de ".current" que o
+ * Thunderbird tem — sem isto, quem move o cursor com Ctrl+seta (que anda sem
+ * mudar a seleção) não vê onde está. Outline em vez de borda para não
+ * reintroduzir 1px de reflow na geometria do cartão. */
+:root[unf-ui]
+  [is="tree-view-table-body"]:is(:focus, :focus-within)
+  > .card-layout.current
+  > td
+  > .card-container {
+  outline: 2px solid var(--unf-accent);
+  outline-offset: -2px;
 }
 
 /* Cartão: [ponto de não lida] [avatar] [conteúdo] */

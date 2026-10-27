@@ -191,8 +191,16 @@
       }
     }
 
-    /* Foco de teclado visível (Tab/F6/setas): anel claro dentro da pílula. */
-    &:focus-visible li.selected > .container {
+    /* Foco de teclado visível (Tab/F6/setas): anel claro dentro da pílula.
+     * Restrito a .current para que, com várias pastas marcadas, o anel diga
+     * qual é a âncora; com uma só, .current e .selected são a mesma linha. */
+    &:focus-visible li.selected.current > .container {
+      outline: 2px solid rgb(255 255 255 / 0.85);
+      outline-offset: -2px;
+    }
+
+    /* Mesma âncora pelo caminho do mouse (ctrl+clique não dá :focus-visible). */
+    &.multi-selected li.selected.current > .container {
       outline: 2px solid rgb(255 255 255 / 0.85);
       outline-offset: -2px;
     }
