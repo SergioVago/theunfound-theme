@@ -883,6 +883,12 @@
 
   // Setas para cima/baixo, Home e End passeiam pelas contas.
   function onListKeydown(pane, event) {
+    // Chord com modificador pertence ao chrome: Alt+Home é cmd_goStartPage,
+    // Alt+End é ir para hoje no calendário. O orderable-tree-listbox do
+    // Thunderbird faz a mesma guarda antes de navegar.
+    if (event.altKey || event.ctrlKey || event.metaKey) {
+      return;
+    }
     const buttons = [...pane.list.children];
     const index = buttons.indexOf(pane.doc.activeElement);
     if (index < 0) {
