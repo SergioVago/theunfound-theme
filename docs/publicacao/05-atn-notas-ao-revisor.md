@@ -87,10 +87,10 @@ sender formatting, and puts the original function back on shutdown. The preview 
 hdr.getStringProperty("preview") (lines 276 and 348), i.e. the snippet Thunderbird itself
 already stores in the message database; the add-on never opens or fetches a message body.
 
-addon/content/sidebarDecorator.js (1,104 lines) — builds the account rail, keeps its
+addon/content/sidebarDecorator.js (1,114 lines) — builds the account rail, keeps its
 collapsed state in Services.xulStore (lines 218 and 226 — the same place Thunderbird keeps
 window layout state) and listens to folder/unread changes through
-MailServices.mailSession.AddFolderListener (line 1026, removed at line 1073).
+MailServices.mailSession.AddFolderListener (line 1036, removed at line 1083).
 
 addon/content/messageDecorator.js (221 lines) — rearranges the about:message header and,
 for the suspicious-sender badge, reads the open message's own Authentication-Results
@@ -260,10 +260,10 @@ desligamento. O texto da prévia é hdr.getStringProperty("preview") (linhas 276
 isto é, o resumo que o próprio Thunderbird já guarda no banco de mensagens; o addon nunca
 abre nem baixa corpo de mensagem.
 
-addon/content/sidebarDecorator.js (1.104 linhas) — monta o trilho de contas, guarda o
+addon/content/sidebarDecorator.js (1.114 linhas) — monta o trilho de contas, guarda o
 estado recolhido em Services.xulStore (linhas 218 e 226, o mesmo lugar onde o Thunderbird
 guarda o layout da janela) e escuta mudanças de pasta/não lidas por
-MailServices.mailSession.AddFolderListener (linha 1026, removido na linha 1073).
+MailServices.mailSession.AddFolderListener (linha 1036, removido na linha 1083).
 
 addon/content/messageDecorator.js (221 linhas) — reorganiza o cabeçalho do about:message
 e, para o selo de remetente suspeito, lê o cabeçalho Authentication-Results da própria
