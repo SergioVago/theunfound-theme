@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "theUnfound Theme para Thunderbird",
   "short_name": "theUnfound Theme",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "O theUnfound Theme deixa o Thunderbird com a cara de um app moderno: barra lateral escura em grafite com trilho de contas recolhível, lista de mensagens com avatar e prévia, painel de leitura limpo, claro e escuro. Só aparência; nada sai daqui.",
   "author": "Sergio Batera",
   "browser_specific_settings": {

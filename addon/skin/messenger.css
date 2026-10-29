@@ -46,29 +46,29 @@
 
 :root[unf-ui] .spaces-toolbar-button {
   border-radius: 10px;
+}
 
-  &:not(.current) {
-    color: var(--unf-icon);
-  }
+:root[unf-ui] .spaces-toolbar-button:not(.current) {
+  color: var(--unf-icon);
+}
 
-  &:hover:not(.current) {
-    background-color: var(--unf-pressed);
-    color: var(--unf-text);
-  }
+:root[unf-ui] .spaces-toolbar-button:hover:not(.current) {
+  background-color: var(--unf-pressed);
+  color: var(--unf-text);
+}
 
-  &.current {
-    color: var(--spaces-button-active-text-color);
-    box-shadow: 0 2px 6px light-dark(rgb(10 108 255 / 0.35), rgb(0 0 0 / 0.5));
+:root[unf-ui] .spaces-toolbar-button.current {
+  color: var(--spaces-button-active-text-color);
+  box-shadow: 0 2px 6px light-dark(rgb(10 108 255 / 0.35), rgb(0 0 0 / 0.5));
+}
 
-    & img {
-      fill: color-mix(in srgb, currentColor 25%, transparent);
-    }
-  }
+:root[unf-ui] .spaces-toolbar-button.current img {
+  fill: color-mix(in srgb, currentColor 25%, transparent);
+}
 
-  & .spaces-badge-container {
-    border-radius: 999px;
-    font-weight: 700;
-  }
+:root[unf-ui] .spaces-toolbar-button .spaces-badge-container {
+  border-radius: 999px;
+  font-weight: 700;
 }
 
 /* ---------- Barra unificada (topo) ---------- */
@@ -89,24 +89,25 @@
 
 :root[unf-ui] #unifiedToolbarContent {
   gap: 4px;
+}
 
-  & .unified-toolbar-button,
-  & .toolbar-button {
-    border-radius: var(--unf-radius-sm);
-    border-color: transparent;
-    background-color: transparent;
-    color: var(--unf-text-2);
+:root[unf-ui] #unifiedToolbarContent .unified-toolbar-button,
+:root[unf-ui] #unifiedToolbarContent .toolbar-button {
+  border-radius: var(--unf-radius-sm);
+  border-color: transparent;
+  background-color: transparent;
+  color: var(--unf-text-2);
+}
 
-    &:not([disabled]):hover {
-      background-color: var(--unf-pressed);
-      color: var(--unf-text);
-    }
-  }
+:root[unf-ui] #unifiedToolbarContent .unified-toolbar-button:not([disabled]):hover,
+:root[unf-ui] #unifiedToolbarContent .toolbar-button:not([disabled]):hover {
+  background-color: var(--unf-pressed);
+  color: var(--unf-text);
+}
 
-  & .search-bar {
-    flex: 0 1 560px;
-    margin-inline: auto;
-  }
+:root[unf-ui] #unifiedToolbarContent .search-bar {
+  flex: 0 1 560px;
+  margin-inline: auto;
 }
 
 :root[unf-ui] :is(global-search-bar, search-bar) {
@@ -140,19 +141,19 @@
 
 :root[unf-ui] .tabmail-tab {
   border-radius: 8px 8px 0 0;
+}
 
-  &:not([selected]) {
-    color: var(--unf-text-2);
-  }
+:root[unf-ui] .tabmail-tab:not([selected]) {
+  color: var(--unf-text-2);
+}
 
-  &[selected] {
-    background-color: var(--unf-surface);
-    color: var(--unf-text);
-  }
+:root[unf-ui] .tabmail-tab[selected] {
+  background-color: var(--unf-surface);
+  color: var(--unf-text);
+}
 
-  & .tab-line {
-    display: none;
-  }
+:root[unf-ui] .tabmail-tab .tab-line {
+  display: none;
 }
 
 /* ---------- Barra de status ---------- */
@@ -170,15 +171,15 @@
   background-color: var(--unf-sidebar);
   color: var(--unf-text);
   border-block-end: 1px solid var(--unf-border);
+}
 
-  & toolbar {
-    background-color: transparent;
-    border: none;
-  }
+:root[unf-ui] #mail-toolbox toolbar {
+  background-color: transparent;
+  border: none;
+}
 
-  & toolbarbutton {
-    border-radius: var(--unf-radius-sm);
-  }
+:root[unf-ui] #mail-toolbox toolbarbutton {
+  border-radius: var(--unf-radius-sm);
 }
 
 :root[unf-ui][windowtype="mail:messageWindow"] #messageBrowser {

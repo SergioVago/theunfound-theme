@@ -119,14 +119,16 @@
   --folder-color-folder-filter: var(--unf-icon);
   --folder-color-rss: var(--unf-icon);
   --folder-color-newsletter: var(--unf-icon);
+}
 
-  & :is(menupopup, panel):not(.autoscroller) {
-    --panel-background-color: var(--unf-surface);
-    --panel-border-color: var(--unf-border-strong);
-    --panel-border-radius: 10px;
-  }
+:root[unf-ui] :is(menupopup, panel):not(.autoscroller) {
+  --panel-background-color: var(--unf-surface);
+  --panel-border-color: var(--unf-border-strong);
+  --panel-border-radius: 10px;
+}
 
-  @media (prefers-contrast) {
+@media (prefers-contrast) {
+  :root[unf-ui] {
     /* Alto contraste: devolve o controle das cores ao Thunderbird/sistema. */
     --selected-item-color: SelectedItem;
     --selected-item-text-color: SelectedItemText;

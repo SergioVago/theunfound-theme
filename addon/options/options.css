@@ -57,33 +57,33 @@ input[type="checkbox"] {
   gap: 2px;
   border-radius: 10px;
   background: var(--surface-3);
+}
 
-  & label {
-    position: relative;
-  }
+.segmented label {
+  position: relative;
+}
 
-  & input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
 
-  & span {
-    display: block;
-    padding: 5px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
+.segmented span {
+  display: block;
+  padding: 5px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
-  & input:checked + span {
-    background: var(--surface);
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
-    font-weight: 600;
-  }
+.segmented input:checked + span {
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
+  font-weight: 600;
+}
 
-  & input:focus-visible + span {
-    outline: 2px solid var(--accent);
-  }
+.segmented input:focus-visible + span {
+  outline: 2px solid var(--accent);
 }
 
 .hint {
@@ -102,11 +102,11 @@ button {
   font: inherit;
   font-weight: 600;
   cursor: pointer;
+}
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 .choices {
@@ -121,36 +121,36 @@ button {
   padding: 8px 10px;
   border-radius: 10px;
   cursor: pointer;
+}
 
-  &:has(input:checked) {
-    background: light-dark(#eef4ff, rgb(77 149 255 / 0.12));
-  }
+.choice:has(input:checked) {
+  background: light-dark(#eef4ff, rgb(77 149 255 / 0.12));
+}
 
-  & input {
-    accent-color: var(--accent);
-    margin: 3px 0 0;
-  }
+.choice input {
+  accent-color: var(--accent);
+  margin: 3px 0 0;
+}
 
-  & strong {
-    font-weight: 600;
-  }
+.choice strong {
+  font-weight: 600;
+}
 
-  & small {
-    display: block;
-    margin-block-start: 2px;
-    font-size: 0.85rem;
-    color: var(--text-3);
-  }
+.choice small {
+  display: block;
+  margin-block-start: 2px;
+  font-size: 0.85rem;
+  color: var(--text-3);
+}
 
-  & .tag {
-    font-style: normal;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--accent);
-    margin-inline-start: 4px;
-  }
+.choice .tag {
+  font-style: normal;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-inline-start: 4px;
 }
 
 .hint-top {
@@ -176,10 +176,10 @@ button {
   margin: 0;
   padding: 0;
   list-style: none;
+}
 
-  & > .hint {
-    grid-column: 1 / -1;
-  }
+.accounts > .hint {
+  grid-column: 1 / -1;
 }
 
 .account {
@@ -190,10 +190,10 @@ button {
   column-gap: 6px;
   padding: 8px 10px;
   border-radius: 10px;
+}
 
-  &:hover {
-    background: light-dark(#f5f7fa, #24262a);
-  }
+.account:hover {
+  background: light-dark(#f5f7fa, #24262a);
 }
 
 .account-avatar {
@@ -211,41 +211,41 @@ button {
   color: #fff;
   font-weight: 650;
   font-size: 0.9rem;
+}
 
-  & img {
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-  }
+.account-avatar img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
 }
 
 .account-text {
   display: grid;
   min-inline-size: 0;
   margin-inline-end: 6px;
+}
 
-  & strong {
-    font-weight: 600;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+.account-text strong {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-  & small {
-    font-size: 0.82rem;
-    color: var(--text-3);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+.account-text small {
+  font-size: 0.82rem;
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-  & .account-source {
-    font-size: 0.76rem;
+.account-text .account-source {
+  font-size: 0.76rem;
+}
 
-    &.is-custom {
-      color: var(--accent);
-    }
-  }
+.account-text .account-source.is-custom {
+  color: var(--accent);
 }
 
 button[hidden] {
@@ -262,10 +262,10 @@ button.secondary {
   background: var(--surface-3);
   color: var(--text);
   font-weight: 500;
+}
 
-  &:hover:not(:disabled) {
-    background: light-dark(#dde3ea, #363940);
-  }
+button.secondary:hover:not(:disabled) {
+  background: light-dark(#dde3ea, #363940);
 }
 
 button:focus-visible {

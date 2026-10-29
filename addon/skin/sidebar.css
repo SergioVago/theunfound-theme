@@ -50,8 +50,10 @@
     --unf-side-separator: rgb(255 255 255 / 0.1);
     --unf-side-focus: #8bbaff;
     --unf-side-selected-blur: color-mix(in srgb, var(--unf-side-selected) 42%, var(--unf-side-bg));
+  }
 
-    @media (prefers-color-scheme: dark) {
+  @media (prefers-color-scheme: dark) {
+    :root[unf-ui]:not([unf-light-sidebar]) {
       --unf-side-bg: #121316;
       --unf-side-title: #8f96a1;
     }
@@ -68,20 +70,18 @@
     border-inline-end: none;
   }
 
-  :root[unf-ui]:not([unf-light-sidebar]) .spaces-toolbar-button {
-    &:focus-visible:not(:hover) {
-      outline-color: var(--unf-side-focus);
-    }
+  :root[unf-ui]:not([unf-light-sidebar]) .spaces-toolbar-button:focus-visible:not(:hover) {
+    outline-color: var(--unf-side-focus);
+  }
 
-    &.current {
-      background-color: var(--unf-side-selected);
-      color: var(--unf-side-selected-text);
-      box-shadow: 0 2px 6px rgb(0 0 0 / 0.35);
-    }
+  :root[unf-ui]:not([unf-light-sidebar]) .spaces-toolbar-button.current {
+    background-color: var(--unf-side-selected);
+    color: var(--unf-side-selected-text);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.35);
+  }
 
-    & .spaces-badge-container {
-      box-shadow: 0 0 0 2px var(--unf-side-bg);
-    }
+  :root[unf-ui]:not([unf-light-sidebar]) .spaces-toolbar-button .spaces-badge-container {
+    box-shadow: 0 0 0 2px var(--unf-side-bg);
   }
 
   /* ======================================================================
@@ -116,124 +116,160 @@
   }
 
   /* Cabeçalho: botões de ícone claros sobre o grafite. */
-  :root[unf-ui]:not([unf-light-sidebar]) #folderPaneHeaderBar .button:not(.button-primary, #folderPaneWriteMessage) {
+  :root[unf-ui]:not([unf-light-sidebar])
+    #folderPaneHeaderBar
+    .button:not(.button-primary, #folderPaneWriteMessage) {
     color: var(--unf-text-2);
+  }
 
-    &:hover {
-      color: var(--unf-text);
-    }
+  :root[unf-ui]:not([unf-light-sidebar])
+    #folderPaneHeaderBar
+    .button:not(.button-primary, #folderPaneWriteMessage):hover {
+    color: var(--unf-text);
+  }
 
-    &:focus-visible {
-      outline: 2px solid var(--unf-side-focus);
-      outline-offset: 1px;
-    }
+  :root[unf-ui]:not([unf-light-sidebar])
+    #folderPaneHeaderBar
+    .button:not(.button-primary, #folderPaneWriteMessage):focus-visible {
+    outline: 2px solid var(--unf-side-focus);
+    outline-offset: 1px;
   }
 
   :root[unf-ui]:not([unf-light-sidebar]) #folderPaneWriteMessage {
     background-color: var(--unf-side-selected);
     box-shadow: 0 1px 3px rgb(0 0 0 / 0.4);
-
-    &:hover {
-      background-color: #2a7fff;
-    }
-
-    &:focus-visible {
-      outline-color: var(--unf-side-focus);
-    }
   }
 
-  :root[unf-ui]:not([unf-light-sidebar]) #folderTree {
-    /* Títulos de seção (contas e modos) em cinza médio, discretos. */
-    & li[data-server-type] > .container > .name,
-    & > li > .mode-container > .mode-name {
-      color: var(--unf-side-title);
-    }
+  :root[unf-ui]:not([unf-light-sidebar]) #folderPaneWriteMessage:hover {
+    background-color: #2a7fff;
+  }
 
-    & li:not(.selected) > .container:hover {
-      background-color: rgb(255 255 255 / 0.07);
-    }
+  :root[unf-ui]:not([unf-light-sidebar]) #folderPaneWriteMessage:focus-visible {
+    outline-color: var(--unf-side-focus);
+  }
 
-    /* Seleção: pílula azul sólida, texto e contador brancos dentro dela.
-     * Sem foco no painel, a mesma pílula, mais apagada. */
-    & li.selected > .container {
-      background-color: var(--unf-side-selected-blur);
-      color: var(--unf-side-selected-text);
+  /* Títulos de seção (contas e modos) em cinza médio, discretos. */
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree li[data-server-type] > .container > .name,
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree > li > .mode-container > .mode-name {
+    color: var(--unf-side-title);
+  }
 
-      & > .name {
-        color: var(--unf-side-selected-text);
-      }
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree li:not(.selected) > .container:hover {
+    background-color: rgb(255 255 255 / 0.07);
+  }
 
-      & > .icon {
-        --icon-color: var(--unf-side-selected-text) !important;
-      }
+  /* Seleção: pílula azul sólida, texto e contador brancos dentro dela.
+   * Sem foco no painel, a mesma pílula, mais apagada. */
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree li.selected > .container {
+    background-color: var(--unf-side-selected-blur);
+    color: var(--unf-side-selected-text);
+  }
 
-      & > .twisty,
-      & > .folder-count-badge,
-      & > .folder-size {
-        color: var(--unf-side-selected-text);
-      }
-    }
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree li.selected > .container > .name {
+    color: var(--unf-side-selected-text);
+  }
 
-    &:focus-within li.selected > .container {
-      background-color: var(--unf-side-selected);
-      color: var(--unf-side-selected-text);
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree li.selected > .container > .icon {
+    --icon-color: var(--unf-side-selected-text) !important;
+  }
 
-      & > .name {
-        color: var(--unf-side-selected-text);
-      }
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree li.selected > .container > .twisty,
+  :root[unf-ui]:not([unf-light-sidebar])
+    #folderTree
+    li.selected
+    > .container
+    > .folder-count-badge,
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree li.selected > .container > .folder-size {
+    color: var(--unf-side-selected-text);
+  }
 
-      & > .icon {
-        --icon-color: var(--unf-side-selected-text) !important;
-      }
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree:focus-within li.selected > .container {
+    background-color: var(--unf-side-selected);
+    color: var(--unf-side-selected-text);
+  }
 
-      & > .folder-count-badge {
-        color: var(--unf-side-selected-text);
-      }
-    }
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree:focus-within li.selected > .container > .name {
+    color: var(--unf-side-selected-text);
+  }
 
-    /* Foco de teclado visível (Tab/F6/setas): anel claro dentro da pílula.
-     * Restrito a .current para que, com várias pastas marcadas, o anel diga
-     * qual é a âncora; com uma só, .current e .selected são a mesma linha. */
-    &:focus-visible li.selected.current > .container {
-      outline: 2px solid rgb(255 255 255 / 0.85);
-      outline-offset: -2px;
-    }
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree:focus-within li.selected > .container > .icon {
+    --icon-color: var(--unf-side-selected-text) !important;
+  }
 
-    /* Mesma âncora pelo caminho do mouse (ctrl+clique não dá :focus-visible). */
-    &.multi-selected li.selected.current > .container {
-      outline: 2px solid rgb(255 255 255 / 0.85);
-      outline-offset: -2px;
-    }
+  :root[unf-ui]:not([unf-light-sidebar])
+    #folderTree:focus-within
+    li.selected
+    > .container
+    > .folder-count-badge {
+    color: var(--unf-side-selected-text);
+  }
 
-    /* Arrastar e soltar: alvo realçado em azul translúcido com contorno. */
-    & li[role="treeitem"].drop-target > .container {
-      background-color: color-mix(in srgb, var(--unf-side-selected) 55%, transparent);
-      color: var(--unf-side-selected-text);
-      outline: 1px solid var(--unf-side-focus);
-      outline-offset: -1px;
+  /* Foco de teclado visível (Tab/F6/setas): anel claro dentro da pílula.
+   * Restrito a .current para que, com várias pastas marcadas, o anel diga
+   * qual é a âncora; com uma só, .current e .selected são a mesma linha. */
+  :root[unf-ui]:not([unf-light-sidebar])
+    #folderTree:focus-visible
+    li.selected.current
+    > .container {
+    outline: 2px solid rgb(255 255 255 / 0.85);
+    outline-offset: -2px;
+  }
 
-      & > .name,
-      & > .folder-count-badge {
-        color: var(--unf-side-selected-text);
-      }
+  /* Mesma âncora pelo caminho do mouse (ctrl+clique não dá :focus-visible). */
+  :root[unf-ui]:not([unf-light-sidebar])
+    #folderTree.multi-selected
+    li.selected.current
+    > .container {
+    outline: 2px solid rgb(255 255 255 / 0.85);
+    outline-offset: -2px;
+  }
 
-      & > .icon {
-        --icon-color: var(--unf-side-selected-text) !important;
-      }
-    }
+  /* Arrastar e soltar: alvo realçado em azul translúcido com contorno. */
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree li[role="treeitem"].drop-target > .container {
+    background-color: color-mix(in srgb, var(--unf-side-selected) 55%, transparent);
+    color: var(--unf-side-selected-text);
+    outline: 1px solid var(--unf-side-focus);
+    outline-offset: -1px;
+  }
 
-    & li.selected.drag-target > .container {
-      background-color: rgb(255 255 255 / 0.1);
-      color: var(--unf-text-2);
-    }
+  :root[unf-ui]:not([unf-light-sidebar])
+    #folderTree
+    li[role="treeitem"].drop-target
+    > .container
+    > .name,
+  :root[unf-ui]:not([unf-light-sidebar])
+    #folderTree
+    li[role="treeitem"].drop-target
+    > .container
+    > .folder-count-badge {
+    color: var(--unf-side-selected-text);
+  }
 
-    /* Pasta com menu de contexto aberto (sem ser a selecionada). */
-    & li.context-menu-target:not(.selected) > .container,
-    & li.context-menu-target:not(.selected) > .container:hover {
-      background-color: rgb(255 255 255 / 0.07);
-      outline: 1px solid var(--unf-side-focus);
-      outline-offset: -1px;
-    }
+  :root[unf-ui]:not([unf-light-sidebar])
+    #folderTree
+    li[role="treeitem"].drop-target
+    > .container
+    > .icon {
+    --icon-color: var(--unf-side-selected-text) !important;
+  }
+
+  :root[unf-ui]:not([unf-light-sidebar]) #folderTree li.selected.drag-target > .container {
+    background-color: rgb(255 255 255 / 0.1);
+    color: var(--unf-text-2);
+  }
+
+  /* Pasta com menu de contexto aberto (sem ser a selecionada). */
+  :root[unf-ui]:not([unf-light-sidebar])
+    #folderTree
+    li.context-menu-target:not(.selected)
+    > .container,
+  :root[unf-ui]:not([unf-light-sidebar])
+    #folderTree
+    li.context-menu-target:not(.selected)
+    > .container:hover {
+    background-color: rgb(255 255 255 / 0.07);
+    outline: 1px solid var(--unf-side-focus);
+    outline-offset: -1px;
   }
 
   :root[unf-ui]:not([unf-light-sidebar]) #dropIndicator {
@@ -257,14 +293,14 @@
   display: inline-grid;
   place-items: center;
   background-image: none !important;
+}
 
-  &::before {
-    content: "";
-    inline-size: 16px;
-    block-size: 16px;
-    background-color: currentColor;
-    mask: var(--unf-icon-rail-collapse) center / 16px no-repeat;
-  }
+:root[unf-ui] :is(.unf-rail-collapse, .unf-rail-expand)::before {
+  content: "";
+  inline-size: 16px;
+  block-size: 16px;
+  background-color: currentColor;
+  mask: var(--unf-icon-rail-collapse) center / 16px no-repeat;
 }
 
 :root[unf-ui] .unf-rail-expand::before {
@@ -276,21 +312,21 @@
 :root[unf-ui] #folderPaneHeaderBar:has(> .unf-rail-collapse) {
   padding-inline: 6px;
   gap: 2px;
+}
 
-  & > .button.icon-only {
-    flex: none;
-    inline-size: 28px;
-    block-size: 28px;
-  }
+:root[unf-ui] #folderPaneHeaderBar:has(> .unf-rail-collapse) > .button.icon-only {
+  flex: none;
+  inline-size: 28px;
+  block-size: 28px;
+}
 
-  & #folderPaneWriteMessage {
-    padding-inline: 25px 9px;
-    background-position-x: 5px;
+:root[unf-ui] #folderPaneHeaderBar:has(> .unf-rail-collapse) #folderPaneWriteMessage {
+  padding-inline: 25px 9px;
+  background-position-x: 5px;
+}
 
-    &:dir(rtl) {
-      background-position-x: right 5px;
-    }
-  }
+:root[unf-ui] #folderPaneHeaderBar:has(> .unf-rail-collapse) #folderPaneWriteMessage:dir(rtl) {
+  background-position-x: right 5px;
 }
 
 /* Linha reserva: só aparece se o usuário esconder o cabeçalho do painel. */
@@ -298,7 +334,9 @@
   display: none;
 }
 
-:root[unf-ui]:not([unf-folder-rail]) #folderPane:has(> #folderPaneHeaderBar[hidden]) > .unf-rail-fallback {
+:root[unf-ui]:not([unf-folder-rail])
+  #folderPane:has(> #folderPaneHeaderBar[hidden])
+  > .unf-rail-fallback {
   display: flex;
   justify-content: flex-end;
   padding: 6px 10px 0;
@@ -309,11 +347,11 @@
   background-color: transparent;
   border-radius: var(--unf-radius-sm);
   color: var(--unf-text-2);
+}
 
-  &:hover {
-    background-color: var(--unf-pressed);
-    color: var(--unf-text);
-  }
+:root[unf-ui] .unf-rail-fallback .unf-rail-collapse:hover {
+  background-color: var(--unf-pressed);
+  color: var(--unf-text);
 }
 
 /* Recolhido: só o trilho; cabeçalho e árvore escondidos. O máximo é o cinto de
@@ -325,10 +363,12 @@
 :root[unf-ui][unf-folder-rail] #folderPane {
   min-inline-size: 0;
   max-inline-size: var(--unf-rail-width);
+}
 
-  & > :is(#folderPaneHeaderBar, #folderTree, .unf-rail-fallback) {
-    display: none !important;
-  }
+:root[unf-ui][unf-folder-rail]
+  #folderPane
+  > :is(#folderPaneHeaderBar, #folderTree, .unf-rail-fallback) {
+  display: none !important;
 }
 
 /* Largura do trilho por cima da variável do splitter (a largura salva não
@@ -357,10 +397,10 @@
   overflow: hidden auto;
   scrollbar-width: none;
   background-color: var(--unf-side-bg);
+}
 
-  &[hidden] {
-    display: none;
-  }
+:root[unf-ui] .unf-rail[hidden] {
+  display: none;
 }
 
 :root[unf-ui] .unf-rail-expand,
@@ -373,11 +413,12 @@
   border: none;
   cursor: default;
   flex: none;
+}
 
-  &:focus-visible {
-    outline: 2px solid var(--unf-side-focus);
-    outline-offset: 2px;
-  }
+:root[unf-ui] .unf-rail-expand:focus-visible,
+:root[unf-ui] .unf-rail-compose:focus-visible {
+  outline: 2px solid var(--unf-side-focus);
+  outline-offset: 2px;
 }
 
 :root[unf-ui] .unf-rail-expand {
@@ -386,11 +427,11 @@
   border-radius: var(--unf-radius-sm);
   background-color: transparent;
   color: var(--unf-text-2);
+}
 
-  &:hover {
-    background-color: var(--unf-pressed);
-    color: var(--unf-text);
-  }
+:root[unf-ui] .unf-rail-expand:hover {
+  background-color: var(--unf-pressed);
+  color: var(--unf-text);
 }
 
 :root[unf-ui] .unf-rail-compose {
@@ -403,18 +444,18 @@
   background-color: var(--unf-side-selected);
   color: #ffffff;
   box-shadow: 0 1px 3px light-dark(rgb(10 108 255 / 0.35), rgb(0 0 0 / 0.45));
+}
 
-  &::before {
-    content: "";
-    inline-size: 16px;
-    block-size: 16px;
-    background-color: currentColor;
-    mask: var(--unf-icon-rail-compose) center / 16px no-repeat;
-  }
+:root[unf-ui] .unf-rail-compose::before {
+  content: "";
+  inline-size: 16px;
+  block-size: 16px;
+  background-color: currentColor;
+  mask: var(--unf-icon-rail-compose) center / 16px no-repeat;
+}
 
-  &:hover {
-    background-color: #2a7fff;
-  }
+:root[unf-ui] .unf-rail-compose:hover {
+  background-color: #2a7fff;
 }
 
 :root[unf-ui] .unf-rail-separator {
@@ -448,24 +489,24 @@
   background: none;
   color: inherit;
   cursor: default;
+}
 
-  &:focus-visible {
-    outline: 2px solid var(--unf-side-focus);
-    outline-offset: 3px;
-  }
+:root[unf-ui] .unf-rail-account:focus-visible {
+  outline: 2px solid var(--unf-side-focus);
+  outline-offset: 3px;
+}
 
-  &:hover > .unf-rail-avatar {
-    box-shadow: 0 0 0 2px var(--unf-side-bg), 0 0 0 4px var(--unf-side-hover-ring);
-  }
+:root[unf-ui] .unf-rail-account:hover > .unf-rail-avatar {
+  box-shadow: 0 0 0 2px var(--unf-side-bg), 0 0 0 4px var(--unf-side-hover-ring);
+}
 
-  /* Conta da pasta aberta: anel azul. */
-  &[aria-current="true"] > .unf-rail-avatar {
-    box-shadow: 0 0 0 2px var(--unf-side-bg), 0 0 0 4px var(--unf-side-selected);
-  }
+/* Conta da pasta aberta: anel azul. */
+:root[unf-ui] .unf-rail-account[aria-current="true"] > .unf-rail-avatar {
+  box-shadow: 0 0 0 2px var(--unf-side-bg), 0 0 0 4px var(--unf-side-selected);
+}
 
-  &:active > .unf-rail-avatar {
-    transform: scale(0.96);
-  }
+:root[unf-ui] .unf-rail-account:active > .unf-rail-avatar {
+  transform: scale(0.96);
 }
 
 :root[unf-ui] .unf-rail-avatar {
@@ -486,18 +527,20 @@
   line-height: 1;
   user-select: none;
   pointer-events: none;
+}
 
-  &.has-photo {
-    background-color: var(--unf-surface-3);
-  }
+:root[unf-ui] .unf-rail-avatar.has-photo {
+  background-color: var(--unf-surface-3);
+}
 
-  & img {
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-  }
+:root[unf-ui] .unf-rail-avatar img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
 
-  @media (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference) {
+  :root[unf-ui] .unf-rail-avatar {
     transition: box-shadow 0.12s ease, transform 0.08s ease;
   }
 }
@@ -523,8 +566,8 @@
   text-align: center;
   white-space: nowrap;
   pointer-events: none;
+}
 
-  &[hidden] {
-    display: none;
-  }
+:root[unf-ui] .unf-rail-badge[hidden] {
+  display: none;
 }

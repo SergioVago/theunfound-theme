@@ -60,17 +60,19 @@
 
   --unf-avatar-size: 36px;
   --unf-card-padding-block: 8px;
+}
 
-  &[uidensity="compact"] {
-    --unf-avatar-size: 30px;
-    --unf-card-padding-block: 3px;
-  }
+:root[unf-ui][uidensity="compact"] {
+  --unf-avatar-size: 30px;
+  --unf-card-padding-block: 3px;
+}
 
-  &[uidensity="touch"] {
-    --unf-avatar-size: 40px;
-    --unf-card-padding-block: 12px;
-  }
+:root[unf-ui][uidensity="touch"] {
+  --unf-avatar-size: 40px;
+  --unf-card-padding-block: 12px;
+}
 
+:root[unf-ui] {
   font-family: var(--unf-font);
 }
 
@@ -108,21 +110,27 @@
 
 /* ---------- Botões genéricos das barras ---------- */
 
-:root[unf-ui] :is(#folderPaneHeaderBar, #threadPaneHeaderBar, #quickFilterBar) .button:not(.button-primary, #folderPaneWriteMessage) {
+:root[unf-ui]
+  :is(#folderPaneHeaderBar, #threadPaneHeaderBar, #quickFilterBar)
+  .button:not(.button-primary, #folderPaneWriteMessage) {
   border-color: transparent;
   background-color: transparent;
   border-radius: var(--unf-radius-sm);
   color: var(--unf-text-2);
+}
 
-  &:hover {
-    background-color: var(--unf-pressed);
-    color: var(--unf-text);
-  }
+:root[unf-ui]
+  :is(#folderPaneHeaderBar, #threadPaneHeaderBar, #quickFilterBar)
+  .button:not(.button-primary, #folderPaneWriteMessage):hover {
+  background-color: var(--unf-pressed);
+  color: var(--unf-text);
+}
 
-  &:is(:active, [aria-pressed="true"], .check-button[aria-pressed="true"]) {
-    background-color: var(--unf-accent-soft);
-    color: var(--unf-accent-text);
-  }
+:root[unf-ui]
+  :is(#folderPaneHeaderBar, #threadPaneHeaderBar, #quickFilterBar)
+  .button:not(.button-primary, #folderPaneWriteMessage):is(:active, [aria-pressed="true"], .check-button[aria-pressed="true"]) {
+  background-color: var(--unf-accent-soft);
+  color: var(--unf-accent-text);
 }
 
 /* ---------- Painel de pastas (barra lateral) ---------- */
@@ -153,121 +161,124 @@
   --icon-size: 16px;
   fill: transparent;
   stroke: currentColor;
+}
 
-  &:hover {
-    background-color: var(--unf-accent-fill-hover);
-  }
+:root[unf-ui] #folderPaneWriteMessage:hover {
+  background-color: var(--unf-accent-fill-hover);
+}
 
-  &:focus-visible {
-    outline: 2px solid var(--unf-accent);
-    outline-offset: 2px;
-  }
+:root[unf-ui] #folderPaneWriteMessage:focus-visible {
+  outline: 2px solid var(--unf-accent);
+  outline-offset: 2px;
 }
 
 :root[unf-ui] #folderTree {
   padding-block: 2px 12px;
+}
 
-  & li[data-mode] {
-    margin-block-end: 6px;
-  }
+:root[unf-ui] #folderTree li[data-mode] {
+  margin-block-end: 6px;
+}
 
-  & .container {
-    margin-inline: 8px;
-    border: none;
-    border-radius: var(--unf-radius-sm);
-    min-block-size: 32px;
-    color: var(--unf-text);
-  }
+:root[unf-ui] #folderTree .container {
+  margin-inline: 8px;
+  border: none;
+  border-radius: var(--unf-radius-sm);
+  min-block-size: 32px;
+  color: var(--unf-text);
+}
 
-  & .twisty {
-    color: var(--unf-text-3);
-  }
+:root[unf-ui] #folderTree .twisty {
+  color: var(--unf-text-3);
+}
 
-  & .icon {
-    fill: transparent;
-  }
+:root[unf-ui] #folderTree .icon {
+  fill: transparent;
+}
 
-  & .name {
-    margin-inline: 9px 6px;
-    font-size: 0.97rem;
-  }
+:root[unf-ui] #folderTree .name {
+  margin-inline: 9px 6px;
+  font-size: 0.97rem;
+}
 
-  /* Contas viram títulos de seção: a hierarquia fica na tipografia, não no recuo. */
-  & li[data-server-type] > .container {
-    min-block-size: 28px;
-    margin-block-start: 8px;
+/* Contas viram títulos de seção: a hierarquia fica na tipografia, não no recuo. */
+:root[unf-ui] #folderTree li[data-server-type] > .container {
+  min-block-size: 28px;
+  margin-block-start: 8px;
+}
 
-    & > .icon {
-      display: none;
-    }
+:root[unf-ui] #folderTree li[data-server-type] > .container > .icon {
+  display: none;
+}
 
-    & > .name {
-      margin-inline-start: 2px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--unf-text-3);
-    }
-  }
+:root[unf-ui] #folderTree li[data-server-type] > .container > .name {
+  margin-inline-start: 2px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--unf-text-3);
+}
 
-  & li.unread > .container > .name {
-    font-weight: 600;
-  }
+:root[unf-ui] #folderTree li.unread > .container > .name {
+  font-weight: 600;
+}
 
-  & li.new-messages > .container > .name {
-    color: var(--unf-text);
-  }
+:root[unf-ui] #folderTree li.new-messages > .container > .name {
+  color: var(--unf-text);
+}
 
-  & > li > .mode-container {
-    border-block-start: none !important;
-    padding-inline: 8px;
+:root[unf-ui] #folderTree > li > .mode-container {
+  border-block-start: none !important;
+  padding-inline: 8px;
+}
 
-    & > .mode-name {
-      padding-inline-start: 10px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--unf-text-3);
-    }
-  }
+:root[unf-ui] #folderTree > li > .mode-container > .mode-name {
+  padding-inline-start: 10px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--unf-text-3);
+}
 
-  & li:not(.selected) > .container:hover {
-    background-color: var(--unf-hover);
-  }
+:root[unf-ui] #folderTree li:not(.selected) > .container:hover {
+  background-color: var(--unf-hover);
+}
 
-  & li.selected > .container {
-    background-color: var(--unf-pressed);
-  }
+:root[unf-ui] #folderTree li.selected > .container {
+  background-color: var(--unf-pressed);
+}
 
-  &:focus-within li.selected > .container,
-  & li[role="treeitem"].drop-target > .container {
-    background-color: var(--unf-accent-soft);
-    color: var(--unf-accent-text);
+:root[unf-ui] #folderTree:focus-within li.selected > .container,
+:root[unf-ui] #folderTree li[role="treeitem"].drop-target > .container {
+  background-color: var(--unf-accent-soft);
+  color: var(--unf-accent-text);
+}
 
-    & > .name {
-      font-weight: 600;
-      color: var(--unf-accent-text);
-    }
+:root[unf-ui] #folderTree:focus-within li.selected > .container > .name,
+:root[unf-ui] #folderTree li[role="treeitem"].drop-target > .container > .name {
+  font-weight: 600;
+  color: var(--unf-accent-text);
+}
 
-    & > .icon {
-      --icon-color: var(--unf-accent) !important;
-    }
+:root[unf-ui] #folderTree:focus-within li.selected > .container > .icon,
+:root[unf-ui] #folderTree li[role="treeitem"].drop-target > .container > .icon {
+  --icon-color: var(--unf-accent) !important;
+}
 
-    & > .folder-count-badge {
-      color: var(--unf-accent-text);
-    }
-  }
+:root[unf-ui] #folderTree:focus-within li.selected > .container > .folder-count-badge,
+:root[unf-ui] #folderTree li[role="treeitem"].drop-target > .container > .folder-count-badge {
+  color: var(--unf-accent-text);
+}
 
-  /* A árvore de pastas é multisselecionável. Com mais de uma pasta marcada o
-   * tema pinta todas com o mesmo preenchimento, então a âncora do teclado
-   * precisa de um anel próprio. Só no modo multi: com uma pasta só,
-   * .current e .selected são a mesma linha e nada muda. */
-  &.multi-selected:focus-within li.selected.current > .container {
-    outline: 2px solid var(--unf-accent);
-    outline-offset: -2px;
-  }
+/* A árvore de pastas é multisselecionável. Com mais de uma pasta marcada o
+ * tema pinta todas com o mesmo preenchimento, então a âncora do teclado
+ * precisa de um anel próprio. Só no modo multi: com uma pasta só,
+ * .current e .selected são a mesma linha e nada muda. */
+:root[unf-ui] #folderTree.multi-selected:focus-within li.selected.current > .container {
+  outline: 2px solid var(--unf-accent);
+  outline-offset: -2px;
 }
 
 :root[unf-ui] #folderTree .folder-count-badge {
@@ -299,18 +310,18 @@
   border-block-end: 1px solid var(--unf-border);
   padding-inline: 10px 8px;
   min-block-size: 48px;
+}
 
-  & .list-header-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-  }
+:root[unf-ui] #threadPaneHeaderBar .list-header-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
 
-  & .thread-pane-count-info {
-    color: var(--unf-text-3);
-    font-size: 0.9rem;
-    padding-inline-start: 6px;
-  }
+:root[unf-ui] #threadPaneHeaderBar .thread-pane-count-info {
+  color: var(--unf-text-3);
+  font-size: 0.9rem;
+  padding-inline-start: 6px;
 }
 
 :root[unf-ui] #threadTree[rows="thread-card"] {
@@ -319,11 +330,11 @@
 
 :root[unf-ui] [is="tree-view-table-body"] > .card-layout > td {
   padding: 1px 6px;
+}
 
-  & > .card-container {
-    border: none;
-    border-radius: var(--unf-radius);
-  }
+:root[unf-ui] [is="tree-view-table-body"] > .card-layout > td > .card-container {
+  border: none;
+  border-radius: var(--unf-radius);
 }
 
 /* Linha sob o cursor do teclado. O tema zera as bordas dos cartões, e fora do
@@ -332,172 +343,217 @@
  * mudar a seleção) não vê onde está. Outline em vez de borda para não
  * reintroduzir 1px de reflow na geometria do cartão. */
 :root[unf-ui]
+
   [is="tree-view-table-body"]:is(:focus, :focus-within)
+
   > .card-layout.current
+
   > td
+
   > .card-container {
   outline: 2px solid var(--unf-accent);
   outline-offset: -2px;
 }
 
 /* Cartão: [ponto de não lida] [avatar] [conteúdo] */
-:root[unf-ui] #threadTree[rows="thread-card"] .card-layout {
-  & .card-container {
-    padding-block: var(--unf-card-padding-block);
-    padding-inline: 2px 10px;
-    column-gap: 8px;
-    align-items: center;
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container {
+  padding-block: var(--unf-card-padding-block);
+  padding-inline: 2px 10px;
+  column-gap: 8px;
+  align-items: center;
+}
 
-    &:has(> .unf-avatar) {
-      grid-template-columns: auto var(--unf-avatar-size) minmax(0, 1fr);
-    }
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container:has(> .unf-avatar) {
+  grid-template-columns: auto var(--unf-avatar-size) minmax(0, 1fr);
+}
 
-    & > .thread-card-column:not(.read-status-column) {
-      padding-block: 0;
-      gap: 1px;
-      min-inline-size: 0;
-    }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container
+  > .thread-card-column:not(.read-status-column) {
+  padding-block: 0;
+  gap: 1px;
+  min-inline-size: 0;
+}
 
-    & .read-status-column {
-      inline-size: 12px;
-      align-items: center;
-      padding-block: 0;
-    }
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container .read-status-column {
+  inline-size: 12px;
+  align-items: center;
+  padding-block: 0;
+}
 
-    & .read-status {
-      inline-size: 8px;
-      block-size: 8px;
-    }
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container .read-status {
+  inline-size: 8px;
+  block-size: 8px;
+}
 
-    & .thread-card-row {
-      line-height: 1.3;
-      gap: 6px;
-    }
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container .thread-card-row {
+  line-height: 1.3;
+  gap: 6px;
+}
 
-    & .sender {
-      font-size: 0.98rem;
-      font-weight: 600;
-      color: var(--unf-text);
-      padding-inline-start: 0;
-    }
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container .sender {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--unf-text);
+  padding-inline-start: 0;
+}
 
-    & .date {
-      font-size: 0.8rem;
-      font-variant-numeric: tabular-nums;
-      color: var(--unf-text-3);
-      opacity: 1;
-    }
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container .date {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--unf-text-3);
+  opacity: 1;
+}
 
-    /* O menu "mais" aparece no lugar da data ao passar o mouse. */
-    & .tree-button-more {
-      position: absolute;
-      inset-inline-end: -2px;
-      inset-block: 0;
-      margin-block: auto;
-      inline-size: 22px;
-      block-size: 22px;
-      border-radius: 6px;
-      opacity: 0;
-    }
+/* O menu "mais" aparece no lugar da data ao passar o mouse. */
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container .tree-button-more {
+  position: absolute;
+  inset-inline-end: -2px;
+  inset-block: 0;
+  margin-block: auto;
+  inline-size: 22px;
+  block-size: 22px;
+  border-radius: 6px;
+  opacity: 0;
+}
 
-    & .thread-card-dynamic-row {
-      grid-template:
-        "subject info" auto
-        "preview button" auto
-        / minmax(0, 1fr) auto;
-      column-gap: 6px;
-      row-gap: 1px;
-      line-height: 1.3;
-    }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container
+  .thread-card-dynamic-row {
+  grid-template:
+    "subject info" auto
+    "preview button" auto
+    / minmax(0, 1fr) auto;
+  column-gap: 6px;
+  row-gap: 1px;
+  line-height: 1.3;
+}
 
-    & .thread-card-subject-container {
-      padding-inline-start: 0;
-    }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container
+  .thread-card-subject-container {
+  padding-inline-start: 0;
+}
 
-    & .subject {
-      font-size: 0.93rem;
-      color: var(--unf-text);
-    }
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container .subject {
+  font-size: 0.93rem;
+  color: var(--unf-text);
+}
 
-    & .thread-card-icon-info {
-      gap: 4px;
-    }
-  }
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container .thread-card-icon-info {
+  gap: 4px;
+}
 
-  /* Não lida: ponto azul + remetente/assunto em negrito. */
-  &[data-properties~="unread"] {
-    --read-status-fill: var(--unf-unread);
-    --read-status-stroke: var(--unf-unread);
-    --read-status-icon: var(--icon-dot);
+/* Não lida: ponto azul + remetente/assunto em negrito. */
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout[data-properties~="unread"] {
+  --read-status-fill: var(--unf-unread);
+  --read-status-stroke: var(--unf-unread);
+  --read-status-icon: var(--icon-dot);
+}
 
-    & .card-container {
-      & .sender {
-        font-weight: 700;
-      }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout[data-properties~="unread"]
+  .card-container
+  .sender {
+  font-weight: 700;
+}
 
-      & .subject {
-        font-weight: 600;
-        color: var(--unf-text);
-      }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout[data-properties~="unread"]
+  .card-container
+  .subject {
+  font-weight: 600;
+  color: var(--unf-text);
+}
 
-      & .date {
-        font-weight: 600;
-        color: var(--unf-text-2);
-      }
-    }
-  }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout[data-properties~="unread"]
+  .card-container
+  .date {
+  font-weight: 600;
+  color: var(--unf-text-2);
+}
 
-  &:not([data-properties~="unread"]) .card-container .subject {
-    color: var(--unf-text-2);
-  }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout:not([data-properties~="unread"])
+  .card-container
+  .subject {
+  color: var(--unf-text-2);
+}
 
-  &[data-properties~="new"] {
-    --read-status-fill: var(--unf-unread);
-    --read-status-stroke: var(--unf-unread);
-  }
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout[data-properties~="new"] {
+  --read-status-fill: var(--unf-unread);
+  --read-status-stroke: var(--unf-unread);
+}
 
-  /* Ações aparecem só no hover/seleção: em repouso o cartão mostra só a mensagem. */
-  &:not([data-properties~="flagged"]):not(:hover) .button-star {
-    opacity: 0;
-  }
+/* Ações aparecem só no hover/seleção: em repouso o cartão mostra só a mensagem. */
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout:not([data-properties~="flagged"]):not(:hover)
+  .button-star {
+  opacity: 0;
+}
 
-  &:hover .tree-button-more {
-    opacity: 0.75;
-  }
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout:hover .tree-button-more {
+  opacity: 0.75;
+}
 
-  &:hover .card-container .date {
-    visibility: hidden;
-  }
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout:hover .card-container .date {
+  visibility: hidden;
+}
 
-  & button.twisty.thread-card-button {
-    border: none;
-    border-radius: 999px;
-    background-color: var(--unf-surface-3);
-    color: var(--unf-text-2);
-    padding: 0 6px;
-    min-block-size: 16px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    opacity: 1;
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout button.twisty.thread-card-button {
+  border: none;
+  border-radius: 999px;
+  background-color: var(--unf-surface-3);
+  color: var(--unf-text-2);
+  padding: 0 6px;
+  min-block-size: 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  opacity: 1;
+}
 
-    &:hover {
-      background-color: var(--unf-border-strong);
-    }
+:root[unf-ui] #threadTree[rows="thread-card"] .card-layout button.twisty.thread-card-button:hover {
+  background-color: var(--unf-border-strong);
+}
 
-    &::before {
-      display: none;
-    }
-  }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  button.twisty.thread-card-button::before {
+  display: none;
+}
 
-  &[data-properties~="hasUnread"] button.twisty {
-    background-color: var(--unf-accent-soft);
-    border: none;
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout[data-properties~="hasUnread"]
+  button.twisty {
+  background-color: var(--unf-accent-soft);
+  border: none;
+}
 
-    & .thread-replies,
-    & .replies-icon {
-      color: var(--unf-accent-text);
-    }
-  }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout[data-properties~="hasUnread"]
+  button.twisty
+  .thread-replies,
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout[data-properties~="hasUnread"]
+  button.twisty
+  .replies-icon {
+  color: var(--unf-accent-text);
 }
 
 /* Avatar circular com iniciais coloridas (ou foto do catálogo). */
@@ -520,16 +576,16 @@
   line-height: 1;
   user-select: none;
   pointer-events: none;
+}
 
-  &.has-photo {
-    background-color: var(--unf-surface-3);
-  }
+:root[unf-ui] .unf-avatar.has-photo {
+  background-color: var(--unf-surface-3);
+}
 
-  & img {
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-  }
+:root[unf-ui] .unf-avatar img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
 }
 
 /* Linha de prévia do conteúdo. */
@@ -563,31 +619,33 @@
 }
 
 /* Cabeçalhos de agrupamento (ordenar por data agrupado etc.). */
-:root[unf-ui] #threadTree[data-show-grouped-by-sort~="true"] .card-layout[data-properties~="dummy"] {
-  & .subject {
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--unf-text-3);
-  }
+:root[unf-ui]
+  #threadTree[data-show-grouped-by-sort~="true"]
+  .card-layout[data-properties~="dummy"]
+  .subject {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--unf-text-3);
+}
 
-  & .sort-header-details {
-    color: var(--unf-text-3);
-    font-weight: 500;
-  }
+:root[unf-ui]
+  #threadTree[data-show-grouped-by-sort~="true"]
+  .card-layout[data-properties~="dummy"]
+  .sort-header-details {
+  color: var(--unf-text-3);
+  font-weight: 500;
 }
 
 /* Visualização em tabela: só cores e respiro, sem mexer na estrutura. */
-:root[unf-ui] #threadTree[rows="thread-row"] {
-  & .table-layout td {
-    border: none;
-  }
+:root[unf-ui] #threadTree[rows="thread-row"] .table-layout td {
+  border: none;
+}
 
-  & thead th {
-    background-color: var(--unf-surface);
-    color: var(--unf-text-3);
-  }
+:root[unf-ui] #threadTree[rows="thread-row"] thead th {
+  background-color: var(--unf-surface);
+  color: var(--unf-text-3);
 }
 
 /* ---------- Filtro rápido ---------- */
@@ -632,25 +690,38 @@
  *   - ele tem imagem (.has-avatar)  → mostra a dele, esconde a nossa;
  *   - ele só tem iniciais/nada       → esconde a dele, fica a nossa.
  * Sem o outro addon, nenhuma destas regras casa. */
-:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container:has(> .recipient-avatar) {
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container:has(> .recipient-avatar) {
   grid-template-columns: auto var(--unf-avatar-size) minmax(0, 1fr) !important;
 }
 
-:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container:is(:has(> .unf-avatar), :has(> .recipient-avatar)) {
-  & > :is(.read-status-column, .thread-card-column:has(> .read-status)) {
-    grid-column: 1;
-    grid-row: 1;
-  }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container:is(:has(> .unf-avatar), :has(> .recipient-avatar))
+  > :is(.read-status-column, .thread-card-column:has(> .read-status)) {
+  grid-column: 1;
+  grid-row: 1;
+}
 
-  & > :is(.unf-avatar, .recipient-avatar) {
-    grid-column: 2;
-    grid-row: 1;
-  }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container:is(:has(> .unf-avatar), :has(> .recipient-avatar))
+  > :is(.unf-avatar, .recipient-avatar) {
+  grid-column: 2;
+  grid-row: 1;
+}
 
-  & > .thread-card-column:not(.read-status-column, :has(> .read-status)) {
-    grid-column: 3;
-    grid-row: 1;
-  }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container:is(:has(> .unf-avatar), :has(> .recipient-avatar))
+  > .thread-card-column:not(.read-status-column, :has(> .read-status)) {
+  grid-column: 3;
+  grid-row: 1;
 }
 
 /* O CSS dele empurra a coluna de conteúdo quando ainda não há avatar. */
@@ -658,11 +729,19 @@
   margin-inline-start: 0;
 }
 
-:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container:has(> .recipient-avatar.has-avatar) > .unf-avatar {
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container:has(> .recipient-avatar.has-avatar)
+  > .unf-avatar {
   display: none;
 }
 
-:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container:has(> .unf-avatar) > .recipient-avatar:not(.has-avatar) {
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container:has(> .unf-avatar)
+  > .recipient-avatar:not(.has-avatar) {
   display: none !important;
 }
 
@@ -675,85 +754,98 @@
   align-self: center;
   border-radius: 50%;
   overflow: hidden;
+}
 
-  /* Logos costumam ter fundo transparente: um disco branco atrás deles evita
-   * que o desenho desapareça no tema escuro. */
-  &.has-avatar {
-    background: #ffffff;
-    box-shadow: inset 0 0 0 1px light-dark(rgb(0 0 0 / 0.06), rgb(255 255 255 / 0.08));
-  }
+/* Logos costumam ter fundo transparente: um disco branco atrás deles evita
+ * que o desenho desapareça no tema escuro. */
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container
+  > .recipient-avatar.has-avatar {
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px light-dark(rgb(0 0 0 / 0.06), rgb(255 255 255 / 0.08));
+}
 
-  & :is(img, canvas, .autoprofilepicture-item) {
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-  }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container
+  > .recipient-avatar
+  :is(img, canvas, .autoprofilepicture-item) {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 /* ---------- Remetente: nome inteligente ----------
  * A linha do remetente é montada pelo threadDecorator em segmentos:
  * nome · domínio (desconhecido) ou ⚠ nome <endereço> (suspeito). */
-:root[unf-ui] #threadTree .card-layout .sender {
-  & .unf-sender-domain {
-    font-weight: 400;
-    color: var(--unf-text-3);
+:root[unf-ui] #threadTree .card-layout .sender .unf-sender-domain {
+  font-weight: 400;
+  color: var(--unf-text-3);
+}
 
-    &::before {
-      content: " · ";
-    }
-  }
+:root[unf-ui] #threadTree .card-layout .sender .unf-sender-domain::before {
+  content: " · ";
+}
 
-  & .unf-sender-address {
-    font-weight: 400;
-    color: var(--unf-text-3);
-  }
+:root[unf-ui] #threadTree .card-layout .sender .unf-sender-address {
+  font-weight: 400;
+  color: var(--unf-text-3);
+}
 
-  & .unf-sender-name + .unf-sender-address {
-    margin-inline-start: 0.3em;
-  }
+:root[unf-ui] #threadTree .card-layout .sender .unf-sender-name + .unf-sender-address {
+  margin-inline-start: 0.3em;
+}
 
-  & .unf-suspicious-address {
-    font-weight: 600;
-    color: var(--unf-warning);
-  }
+:root[unf-ui] #threadTree .card-layout .sender .unf-suspicious-address {
+  font-weight: 600;
+  color: var(--unf-warning);
+}
 
-  & .unf-sender-name + .unf-suspicious-address {
-    margin-inline-start: 0.3em;
-  }
+:root[unf-ui] #threadTree .card-layout .sender .unf-sender-name + .unf-suspicious-address {
+  margin-inline-start: 0.3em;
+}
 
-  & .unf-sender-claimed-name {
-    font-weight: 400;
-    color: var(--unf-text-3);
+:root[unf-ui] #threadTree .card-layout .sender .unf-sender-claimed-name {
+  font-weight: 400;
+  color: var(--unf-text-3);
+}
 
-    &::before {
-      content: " · ";
-    }
-  }
+:root[unf-ui] #threadTree .card-layout .sender .unf-sender-claimed-name::before {
+  content: " · ";
+}
 
-  & .unf-sender-alert {
-    display: inline-block;
-    inline-size: 14px;
-    block-size: 14px;
-    margin-inline-end: 4px;
-    vertical-align: -2px;
-    background-image: var(--icon-warning);
-    background-size: contain;
-    background-repeat: no-repeat;
-    -moz-context-properties: fill, stroke;
-    fill: color-mix(in srgb, var(--unf-warning-icon) 25%, transparent);
-    stroke: var(--unf-warning-icon);
-  }
+:root[unf-ui] #threadTree .card-layout .sender .unf-sender-alert {
+  display: inline-block;
+  inline-size: 14px;
+  block-size: 14px;
+  margin-inline-end: 4px;
+  vertical-align: -2px;
+  background-image: var(--icon-warning);
+  background-size: contain;
+  background-repeat: no-repeat;
+  -moz-context-properties: fill, stroke;
+  fill: color-mix(in srgb, var(--unf-warning-icon) 25%, transparent);
+  stroke: var(--unf-warning-icon);
 }
 
 /* Remetente suspeito: nada de logo/foto do outro addon (um golpista pode
  * herdar o logotipo de um domínio parecido). Fica o nosso avatar. */
-:root[unf-ui] #threadTree[rows="thread-card"] .card-layout .card-container:has(.sender.unf-suspicious) {
-  & > .recipient-avatar {
-    display: none !important;
-  }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container:has(.sender.unf-suspicious)
+  > .recipient-avatar {
+  display: none !important;
+}
 
-  & > .unf-avatar {
-    display: grid !important;
-  }
+:root[unf-ui]
+  #threadTree[rows="thread-card"]
+  .card-layout
+  .card-container:has(.sender.unf-suspicious)
+  > .unf-avatar {
+  display: grid !important;
 }

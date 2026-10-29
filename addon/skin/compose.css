@@ -17,20 +17,20 @@
 :root[unf-ui] #compose-toolbox {
   background-color: var(--unf-sidebar);
   border-block-end: 1px solid var(--unf-border);
+}
 
-  & toolbar {
-    background-color: transparent;
-    border: none;
-  }
+:root[unf-ui] #compose-toolbox toolbar {
+  background-color: transparent;
+  border: none;
+}
 
-  & toolbarbutton {
-    border-radius: var(--unf-radius-sm);
-    border-color: transparent !important;
-  }
+:root[unf-ui] #compose-toolbox toolbarbutton {
+  border-radius: var(--unf-radius-sm);
+  border-color: transparent !important;
+}
 
-  & toolbarseparator {
-    opacity: 0.5;
-  }
+:root[unf-ui] #compose-toolbox toolbarseparator {
+  opacity: 0.5;
 }
 
 :root[unf-ui] #button-send {
@@ -41,10 +41,10 @@
   font-weight: 600;
   fill: transparent;
   stroke: currentColor;
+}
 
-  &:not([disabled]):hover {
-    background-color: var(--unf-accent-fill-hover) !important;
-  }
+:root[unf-ui] #button-send:not([disabled]):hover {
+  background-color: var(--unf-accent-fill-hover) !important;
 }
 
 /* Cabeçalhos: De / Para / Assunto */
@@ -53,29 +53,34 @@
   color: var(--unf-text);
   padding-inline: 8px;
   border-block-end: 1px solid var(--unf-border);
+}
 
-  & label:not(.pill-label) {
-    color: var(--unf-text-3);
-  }
+:root[unf-ui] #MsgHeadersToolbar label:not(.pill-label) {
+  color: var(--unf-text-3);
 }
 
 :root[unf-ui] #MsgHeadersToolbar :is(.address-container, .input-container, #msgIdentity) {
   border-color: transparent;
   border-radius: var(--unf-radius-sm);
   background-color: var(--unf-surface-2);
+}
 
-  &:focus-within {
-    background-color: var(--unf-field);
-    outline: 2px solid var(--unf-accent);
-    outline-offset: -2px;
-  }
+:root[unf-ui]
+  #MsgHeadersToolbar
+  :is(.address-container, .input-container, #msgIdentity):focus-within {
+  background-color: var(--unf-field);
+  outline: 2px solid var(--unf-accent);
+  outline-offset: -2px;
 }
 
 :root[unf-ui] #msgSubject {
   font-weight: 600;
 }
 
-:root[unf-ui] #MsgHeadersToolbar :is(.address-container, .input-container) :is(input, .address-input) {
+:root[unf-ui]
+  #MsgHeadersToolbar
+  :is(.address-container, .input-container)
+  :is(input, .address-input) {
   background-color: transparent;
 }
 
@@ -90,11 +95,11 @@
   background-color: var(--unf-accent-soft);
   color: var(--unf-text);
   padding-inline: 9px;
+}
 
-  &[selected] {
-    background-color: var(--unf-accent-fill);
-    color: var(--unf-accent-contrast);
-  }
+:root[unf-ui] .address-pill[selected] {
+  background-color: var(--unf-accent-fill);
+  color: var(--unf-accent-contrast);
 }
 
 /* Barra de formatação */
@@ -104,15 +109,13 @@
   border-color: var(--unf-border);
 }
 
-:root[unf-ui] #FormatToolbar {
-  & toolbarbutton,
-  & menulist {
-    border-radius: var(--unf-radius-sm);
-  }
+:root[unf-ui] #FormatToolbar toolbarbutton,
+:root[unf-ui] #FormatToolbar menulist {
+  border-radius: var(--unf-radius-sm);
+}
 
-  & toolbarseparator {
-    opacity: 0.5;
-  }
+:root[unf-ui] #FormatToolbar toolbarseparator {
+  opacity: 0.5;
 }
 
 /* Barra de status */
