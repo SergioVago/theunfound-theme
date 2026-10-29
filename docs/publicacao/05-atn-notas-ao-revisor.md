@@ -155,22 +155,34 @@ library is bundled, so there is no VENDORS.md / library reference to check.
 
 6. ABOUT strict_max_version
 
-browser_specific_settings.gecko.strict_max_version is "158.*" because the ATN linter
-requires a strict maximum version for mail experiments, and because the add-on reads
-Thunderbird's internal DOM, which can change between major releases. I will ship an
+browser_specific_settings.gecko.strict_max_version is "158.*" because Thunderbird requires
+a strict maximum version for add-ons that use an Experiment API, and because the add-on
+reads Thunderbird's internal DOM, which can change between major releases. I will ship an
 updated version for each new Thunderbird release.
 
-On validation, so you know I am not surprised by it: the public addons-linter (the Firefox
-JS edition, v10) is a Firefox tool and does not know Thunderbird's experiment APIs, so on
-this .xpi it reports MANIFEST_FIELD_PRIVILEGED for /experiment_apis ("privileged manifest
-fields are only allowed in privileged extensions"), four UNSUPPORTED_API warnings (the four
-functions of the unfoundTheme namespace), MISSING_DATA_COLLECTION_PERMISSIONS and a
-"strict_max_version not required" warning. None of them is a defect here: the first two are
-Firefox's privileged-extension rule (mail experiments are privileged by definition on ATN),
-data_collection_permissions is deliberately not declared (it is disabled in Thunderbird and
-may be rejected as a reserved field, and the add-on collects nothing), and
-strict_max_version is required by Thunderbird for mail experiments — the opposite of the
-Firefox rule the warning comes from.
+ATN's own validator, on this exact .xpi, reported 0 errors, 56 warnings and 1 notice. All
+56 warnings are the same message, "Invalid nesting of selectors found": they are native CSS
+nesting, and each one points at the opening line of a top-level rule whose block nests, not
+at an invalid selector (sidebar.css 15, about3pane.css 14, aboutMessage.css 8,
+options/options.css 8, compose.css 6, messenger.css 4, tokens.css 1). The declared floor is
+Thunderbird 140 and native nesting has been in Gecko since 117, so every version this
+add-on supports parses it; the CSS itself has no error, and the single notice is the
+"strict_max_version not required" one answered above. Nothing else came up: no
+MANIFEST_FIELD_PRIVILEGED, no UNSUPPORTED_API, no MISSING_DATA_COLLECTION_PERMISSIONS.
+
+On validation, so you know I am not surprised by it either: the public addons-linter (the
+Firefox JS edition, v10), which my CI runs, gives a different output on the same file. It
+is a Firefox tool and does not know Thunderbird's experiment APIs, so on this .xpi it
+reports MANIFEST_FIELD_PRIVILEGED for /experiment_apis ("privileged manifest fields are
+only allowed in privileged extensions"), four UNSUPPORTED_API warnings (the four functions
+of the unfoundTheme namespace), a MISSING_DATA_COLLECTION_PERMISSIONS warning and the same
+"strict_max_version not required" notice ATN gives, and no nesting warning at all. Both
+tools classify it identically; it is the only finding they agree on. None of them is a
+defect here: the first two are Firefox's privileged-extension rule (mail experiments are
+privileged by definition on ATN), data_collection_permissions is deliberately not declared
+(it is disabled in Thunderbird and may be rejected as a reserved field, and the add-on
+collects nothing), and strict_max_version is required by Thunderbird for mail
+experiments — the opposite of the Firefox rule the notice comes from.
 
 7. TRADEMARKS
 
@@ -328,22 +340,35 @@ terceiro está embutida, logo não há VENDORS.md / referência de biblioteca a 
 
 6. SOBRE O strict_max_version
 
-browser_specific_settings.gecko.strict_max_version é "158.*" porque o linter da ATN exige
-versão máxima estrita para mail experiments, e porque o addon lê o DOM interno do
+browser_specific_settings.gecko.strict_max_version é "158.*" porque o Thunderbird exige
+versão máxima estrita de addon que usa Experiment API, e porque o addon lê o DOM interno do
 Thunderbird, que pode mudar entre versões maiores. Publicarei versão atualizada a cada
 lançamento novo do Thunderbird.
 
-Sobre validação, para você saber que não me pegou de surpresa: o addons-linter público (a
-edição JS, v10) é ferramenta do Firefox e não conhece as Experiment APIs do Thunderbird;
-neste .xpi ele devolve MANIFEST_FIELD_PRIVILEGED em /experiment_apis ("privileged manifest
-fields are only allowed in privileged extensions"), quatro avisos UNSUPPORTED_API (as
-quatro funções do namespace unfoundTheme), MISSING_DATA_COLLECTION_PERMISSIONS e o aviso de
-strict_max_version "not required". Nenhum é defeito aqui: os dois primeiros são a regra de
-extensão privilegiada do Firefox (mail experiment é privilegiado por definição na ATN), o
-data_collection_permissions não foi declarado de propósito (está desativado no Thunderbird
-e pode ser recusado como campo reservado, e o addon não coleta nada) e o
-strict_max_version é exigido pelo Thunderbird para mail experiments — o contrário da regra
-do Firefox de onde vem o aviso.
+O validador da própria ATN, neste exato .xpi, devolveu 0 erros, 56 avisos e 1 notice. Os 56
+avisos são todos a mesma mensagem, "Invalid nesting of selectors found": é aninhamento
+nativo de CSS, e cada aviso aponta a linha de abertura de uma regra de topo cujo bloco
+aninha, não um seletor inválido (sidebar.css 15, about3pane.css 14, aboutMessage.css 8,
+options/options.css 8, compose.css 6, messenger.css 4, tokens.css 1). O piso declarado é
+Thunderbird 140 e aninhamento nativo existe no Gecko desde o 117, então toda versão que
+este addon suporta analisa isso; o CSS não tem erro nenhum, e o único notice é o de
+strict_max_version "not required" respondido acima. Nada mais apareceu: nenhum
+MANIFEST_FIELD_PRIVILEGED, nenhum UNSUPPORTED_API, nenhum
+MISSING_DATA_COLLECTION_PERMISSIONS.
+
+Sobre validação, para você saber que também não me pegou de surpresa: o addons-linter
+público (a edição JS, v10), que o meu CI roda, dá saída diferente no mesmo arquivo. Ele é
+ferramenta do Firefox e não conhece as Experiment APIs do Thunderbird; neste .xpi ele
+devolve MANIFEST_FIELD_PRIVILEGED em /experiment_apis ("privileged manifest fields are only
+allowed in privileged extensions"), quatro avisos UNSUPPORTED_API (as quatro funções do
+namespace unfoundTheme), um aviso MISSING_DATA_COLLECTION_PERMISSIONS e o mesmo notice de
+strict_max_version "not required" que a ATN dá, e nenhum aviso de aninhamento. As duas
+ferramentas classificam esse igual; é o único em que concordam. Nenhum deles é defeito
+aqui: os dois primeiros são a regra de extensão privilegiada do Firefox (mail experiment é
+privilegiado por definição na ATN), o data_collection_permissions não foi declarado de
+propósito (está desativado no Thunderbird e pode ser recusado como campo reservado, e o
+addon não coleta nada) e o strict_max_version é exigido pelo Thunderbird para mail
+experiments — o contrário da regra do Firefox de onde vem o notice.
 
 7. MARCAS
 

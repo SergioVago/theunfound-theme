@@ -40,6 +40,19 @@ jobs:
       #     Thunderbird EXIGE strict_max_version para mail experiments (o
       #     proprio scripts/build.sh recusa empacotar sem ele).
       # Se aparecer qualquer coisa fora dessa lista, ai sim e para olhar.
+      #
+      # Esta lista NAO e o veredito da loja: o validador da PROPRIA ATN, medido
+      # no upload da 0.4.0, deu 0 erros, 56 avisos "Invalid nesting of selectors
+      # found" (aninhamento nativo de CSS, em 6 dos 7 arquivos de skin mais o
+      # options/options.css -- o messageContent.css nao aninha e nao foi
+      # apontado; aceito por todo Thunderbird >= 140) e 1 notice de
+      # strict_max_version "not required". Dos quatro achados acima, tres nao
+      # aparecem la: MANIFEST_FIELD_PRIVILEGED, UNSUPPORTED_API e
+      # MISSING_DATA_COLLECTION_PERMISSIONS. O quarto, o strict_max_version, e o
+      # unico em que os dois concordam, e os dois o classificam como notice. O
+      # do Firefox por sua vez nao emite nenhum aviso de aninhamento: os dois
+      # divergem nas duas direcoes. O da ATN libera o upload; quem decide a
+      # submissao e a revisao humana, que ainda nao aconteceu.
       - name: addons-linter (informativo, nao bloqueia)
         continue-on-error: true
         run: npx --yes addons-linter@10 dist/theunfound-theme.xpi || true
