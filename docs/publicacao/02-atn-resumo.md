@@ -47,7 +47,7 @@ theUnfound Theme gives Thunderbird the look of a modern mail app: a graphite dar
 |---|---|---|
 | `manifest.name` | `theUnfound Theme para Thunderbird` | 33 |
 | `manifest.short_name` | `theUnfound Theme` | 16 |
-| `manifest.version` | `0.4.0` | — |
+| `manifest.version` | `0.4.1` | — |
 | `manifest.author` | `Sergio Batera` | — |
 | `manifest.description` | o **resumo pt-BR** acima (244 chars) — é o texto que o Thunderbird mostra em `about:addons` e o que vai no campo "Resumo" da ATN | 244 |
 | `browser_specific_settings.gecko.id` | `theme@theunfound.com.br` (permanente) | — |

@@ -20,6 +20,17 @@ addon.
 Mais capturas em [`screenshots/`](screenshots/): trilho de contas, barra
 clara e a página de opções.
 
+## Novidades da 0.4.1
+
+- **Nenhuma mudança de aparência:** esta versão não altera um pixel da
+  interface. É só uma reescrita interna do CSS.
+- **CSS sem aninhamento de seletor:** os 208 sítios de aninhamento nativo
+  das oito folhas de estilo foram achatados — cada `&` virou o seletor do
+  pai —, sem mexer em nenhum seletor efetivo nem em nenhuma declaração. O
+  validador da addons.thunderbird.net apontava 56 avisos "Invalid nesting of
+  selectors found" no upload da 0.4.0; sem seletor aninhado, eles não têm
+  mais como aparecer.
+
 ## Novidades da 0.4.0
 
 - **Nome e identidade próprios:** o addon passou a se chamar **theUnfound

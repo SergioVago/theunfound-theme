@@ -53,6 +53,14 @@ jobs:
       # do Firefox por sua vez nao emite nenhum aviso de aninhamento: os dois
       # divergem nas duas direcoes. O da ATN libera o upload; quem decide a
       # submissao e a revisao humana, que ainda nao aconteceu.
+      #
+      # A 0.4.1 reescreveu os 8 arquivos de CSS sem nenhum aninhamento de
+      # seletor: cada "&" virou o seletor do pai, sem mudanca de aparencia, de
+      # seletor efetivo ou de declaracao. Como nao sobrou seletor aninhado
+      # nenhum, aqueles 56 avisos nao tem mais como aparecer, e o esperado e
+      # sobrar so o notice de strict_max_version. O paragrafo acima e historico:
+      # ninguem subiu a 0.4.1 ainda, entao isso e o que a mudanca implica, nao
+      # medicao.
       - name: addons-linter (informativo, nao bloqueia)
         continue-on-error: true
         run: npx --yes addons-linter@10 dist/theunfound-theme.xpi || true

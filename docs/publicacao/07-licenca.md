@@ -13,7 +13,7 @@
 por três motivos concretos.
 
 1. **Todo arquivo do addon que aceita comentário tem o cabeçalho da MPL 2.0.** Conferido
-   em `addon/` na 0.4.0: **17 dos 19** arquivos empacotados abrem com o bloco de três
+   em `addon/` na 0.4.1: **17 dos 19** arquivos empacotados abrem com o bloco de três
    linhas
    `"This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0"`
    — os 15 de código (7 `.js`/`.mjs` e 8 `.css`) mais `addon/options/options.html`
@@ -116,7 +116,7 @@ Checado arquivo por arquivo:
 - [Mozilla Public License 2.0 (texto)](https://www.mozilla.org/MPL/2.0/) — §1.9, §2.1, §2.3, §3.3, §5.2 e Exhibit A
 - [MPL 2.0 FAQ (copyleft por arquivo, compatibilidade com GPL/LGPL/AGPL)](https://www.mozilla.org/en-US/MPL/2.0/FAQ/)
 - [Add-on Policies — código revisável, sem ofuscação](https://extensionworkshop.com/documentation/publish/add-on-policies/)
-- Conferência de cabeçalhos e dependências na 0.4.0:
+- Conferência de cabeçalhos e dependências na 0.4.1:
   `grep -rl "This Source Code Form is subject" addon/` (17 dos 19 arquivos empacotados —
   faltam só `manifest.json` e `schema.json`, que não aceitam comentário) e
   `grep -hnE "^\s*(import|from) " tools/tbctl.py`

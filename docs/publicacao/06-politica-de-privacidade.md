@@ -29,7 +29,7 @@ recusada como "reserved" no upload. O que cobre a exigência da política 6.2.1
 data") é o texto abaixo + a frase "nada é transmitido" na descrição. Como o addon não
 coleta nem transmite nada, não há consentimento a colher.
 
-**Conferido contra o código da 0.4.0:** as três coisas que o addon grava são exatamente as
+**Conferido contra o código da 0.4.1:** as três coisas que o addon grava são exatamente as
 listadas abaixo — `storage.local` (opções + foto por conta, saneada por `cleanPhotos()` em
 `addon/background.js`), `Services.xulStore` (um valor: o estado recolhido do trilho, em
 `addon/content/sidebarDecorator.js`) e, **somente após o clique no botão**, as três prefs
