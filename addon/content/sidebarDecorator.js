@@ -57,6 +57,8 @@
   // Trava de tamanho do #messagePaneSplitter e o painel que soltamos dela.
   const LOCK_ATTRIBUTE = "resize-lock-ids";
   const LOCK_TARGET = "folderPane";
+  // Atributo que tira o #folderPaneSplitter de alcance no modo trilho.
+  const SPLITTER_DISABLED = "disabled";
   // Lista de resize-lock-ids de cada layout, igual à que o #setLayout do
   // pane-layout.mjs escreve (no clássico o painel de pastas é uma coluna de
   // altura cheia e fica de fora). A lista vem daqui, nunca do atributo: o que
@@ -467,6 +469,9 @@
     const focused = doc.activeElement;
     const inRail = rail.contains(focused);
     const inTree = !inRail && !!doc.getElementById("folderPane")?.contains(focused);
+    // holdFolderSplitter tira o foco do splitter; ele vai para o trilho.
+    const onSplitter =
+      !!focused && focused === doc.getElementById("folderPaneSplitter");
     // O #folderPaneSplitter sai de alcance antes de o trilho estreitar o
     // painel e só volta depois que ele tem a largura salva de novo: nunca há
     // um instante em que o splitter responde medindo o trilho.
@@ -483,7 +488,7 @@
     }
     // O foco não pode ficar num elemento que acabou de sumir.
     try {
-      if (collapsed && (moveFocus || inTree)) {
+      if (collapsed && (moveFocus || inTree || onSplitter)) {
         pane.expand.focus();
       } else if (!collapsed && (moveFocus || inRail)) {
         (doc.getElementById("folderPaneHeaderBar")?.hidden
@@ -655,7 +660,9 @@
    * Sem retrato — a janela abriu já recolhida, ou o painel de mensagem mudou
    * de largura no modo trilho — resta re-derivar. Aí a largura salva vai antes
    * para o #folderPane: é o valor que o próprio Thunderbird grava, e sem ele a
-   * coluna só chega lá quando sobra espaço de sobra.
+   * coluna só chega lá quando sobra espaço de sobra. Isso só quando há trava a
+   * refazer: sem tamanho salvo do painel de mensagem o Thunderbird não trava
+   * nada (ver relockSize), e o palpite ficaria inline para sempre.
    */
   function restoreSplitterLock(pane, splitter, wanted) {
     const property = lockProperty(splitter);
@@ -674,10 +681,14 @@
       return;
     }
     clearLockStyle(pane);
-    // A largura salva só serve de palpite no eixo da largura; no de altura
+    // A largura salva só serve de palpite no eixo da largura, e só com trava a
+    // refazer. Sem tamanho salvo do painel de mensagem o pane-splitter nem
+    // trava (o #resizeWithWindowActive dele pede esse tamanho) e só apaga o
+    // inline que ele mesmo gravou: o nosso prenderia o painel de pastas nessa
+    // largura, surdo ao splitter, até a aba recarregar. No eixo de altura
     // (clássico e largo) quem mede é o Thunderbird, e um "height" nosso aqui
     // ficaria para sempre.
-    if (property == "width" && saved > 0) {
+    if (property == "width" && saved > 0 && splitter[property] != null) {
       writeLockStyle(pane, LOCK_TARGET, property, `${saved}px`);
     }
     // Com o painel em display:none não há o que re-derivar: o Thunderbird
@@ -789,27 +800,41 @@
   // nosso enquanto o trilho estiver recolhido. Por isso, nesse intervalo, o
   // isDisabled da instância só anota o que o Thunderbird quer (e, como o
   // tree.focus do attach, sai ao soltar), e um observador repõe o atributo se
-  // outro código o mexer direto.
-
-  const SPLITTER_DISABLED = "disabled";
+  // outro código o tirar ou o deixar vazio, as formas que o Thunderbird grava.
+  // Um valor não vazio é de outra instância: o splitter segue desativado, e
+  // brigar por ele com o observador dela seria um laço sem fim de microtasks.
+  //
+  // O disabled não encerra um redimensionamento já em andamento: no 159 o
+  // keyup ou o blur o terminam sem olhar isDisabled e medem o painel naquele
+  // instante — com o trilho já estreito, gravariam a largura do trilho. Ele
+  // termina antes, ainda na largura real: o blur encerra o do teclado (o foco
+  // vai para o trilho, ver applyPaneState), o endResize, um arrasto.
 
   function holdFolderSplitter(pane) {
     const splitter = pane.doc.getElementById("folderPaneSplitter");
     if (!splitter || pane.splitterHold) {
       return;
     }
+    splitter.endResize?.();
+    if (pane.doc.activeElement === splitter) {
+      splitter.blur();
+    }
     const hold = {
       splitter,
       // O Thunderbird grava o atributo vazio (toggleAttribute); um valor não
       // vazio é resto de outra instância e não diz o que ele quer.
-      wanted: splitter.getAttribute(SPLITTER_DISABLED) === "",
+      wanted: splitter.getAttribute(SPLITTER_DISABLED) == "",
       set(value) {
         hold.wanted = !!value;
       },
       observer: new pane.win.MutationObserver(() => {
-        if (splitter.getAttribute(SPLITTER_DISABLED) !== owner()) {
-          hold.wanted = splitter.hasAttribute(SPLITTER_DISABLED);
-          splitter.setAttribute(SPLITTER_DISABLED, owner());
+        if (!active || pane.splitterHold !== hold) {
+          return;
+        }
+        const value = splitter.getAttribute(SPLITTER_DISABLED);
+        if (value == null || value == "") {
+          hold.wanted = value != null;
+          setOwnedAttribute(splitter, SPLITTER_DISABLED, true);
         }
       }),
     };
@@ -822,7 +847,7 @@
       },
       set: hold.set,
     });
-    splitter.setAttribute(SPLITTER_DISABLED, owner());
+    setOwnedAttribute(splitter, SPLITTER_DISABLED, true);
     hold.observer.observe(splitter, { attributeFilter: [SPLITTER_DISABLED] });
   }
 
@@ -838,7 +863,7 @@
     if (Object.getOwnPropertyDescriptor(splitter, "isDisabled")?.set === hold.set) {
       delete splitter.isDisabled;
     }
-    if (splitter.getAttribute(SPLITTER_DISABLED) !== owner()) {
+    if (splitter.getAttribute(SPLITTER_DISABLED) != owner()) {
       return;
     }
     if (hold.wanted) {
@@ -1008,11 +1033,11 @@
     // "Home" e companhia são teclas nomeadas, então event.key não muda com
     // shift e Shift+seta CASA com o switch abaixo. O que torna isso seguro é
     // só não existir binding de chrome ali: nos omni.ja dos TB 158 e 159, os
-    // únicos <key> em seta/Home/End são key_goStartPage (VK_HOME), o
-    // calendar-go-to-today-key (VK_END) e os dois
-    // key_moveAttachmentBundle* da janela de composição (VK_UP/VK_DOWN),
-    // todos modifiers="alt". Se uma versão futura acrescentar um com shift,
-    // este handler passa a comê-lo e o shift entra na guarda.
+    // únicos <key> em ↑/↓/Home/End são key_goStartPage (VK_HOME), o
+    // calendar-go-to-today-key (VK_END) e, na composição, os quatro
+    // key_moveAttachment{BundleUp,BundleDown,Top,Bottom} (VK_UP/VK_DOWN/
+    // VK_Home/VK_End), todos modifiers="alt". Se uma versão futura acrescentar
+    // um com shift, este handler passa a comê-lo e o shift entra na guarda.
     if (event.altKey || event.ctrlKey || event.metaKey) {
       return;
     }
