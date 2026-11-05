@@ -141,6 +141,10 @@ def main():
             f.write(f'\nuser_pref("marionette.port", {a.port});\n')
             f.write(PROFILE_PREFS)
         env = dict(os.environ)
+        # Gecko 159 dropped the --remote-allow-system-access flag; Marionette's
+        # chrome context now needs this variable instead. 158 reads it too, and
+        # the flag stays below for older builds.
+        env["MOZ_REMOTE_ALLOW_SYSTEM_ACCESS"] = "1"
         if not a.no_headless:
             env.update(MOZ_HEADLESS="1", MOZ_HEADLESS_WIDTH=str(a.width), MOZ_HEADLESS_HEIGHT=str(a.height))
         log = open(a.log or os.path.join(prof, "tbctl.log"), "ab")
