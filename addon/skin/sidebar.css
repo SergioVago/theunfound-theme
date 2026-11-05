@@ -15,8 +15,12 @@
  * - Trilho de contas: com `unf-folder-rail` na raiz de about:3pane, o
  *   painel de pastas vira uma coluna estreita só com as fotos das contas. A
  *   largura vem de uma variável !important por cima da que o splitter grava
- *   em linha no <body>, então a largura salva pelo Thunderbird nunca muda e
- *   volta sozinha ao remover o atributo. */
+ *   em linha no <body>, então a largura salva pelo Thunderbird não é tocada e
+ *   volta sozinha ao remover o atributo — desde que ninguém redimensione o
+ *   painel pelo #folderPaneSplitter enquanto isso: o splitter mediria o
+ *   trilho e gravaria a largura estreita. Esta folha barra o mouse; o
+ *   teclado, que o TB 159 passou a aceitar, fica com o `disabled` que o
+ *   decorador põe no splitter (ver a regra do #folderPaneSplitter abaixo). */
 
 :root[unf-ui] {
   --unf-rail-width: 60px;
@@ -379,7 +383,15 @@
   --folderPaneSplitter-width: var(--unf-rail-width) !important;
 }
 
-/* Arrastar o splitter no modo trilho gravaria a largura estreita. */
+/* No modo trilho o splitter mede o trilho: qualquer redimensionamento que
+ * terminasse gravaria a largura estreita como a largura salva do painel.
+ * Aqui sai o mouse. No TB 159 o splitter também é operável pelo teclado
+ * (tabIndex 0, role=separator, as setas redimensionam e o keyup grava), e
+ * isso o CSS não alcança: o decorador põe `disabled` no #folderPaneSplitter
+ * enquanto o trilho estiver recolhido (ver holdFolderSplitter em
+ * content/sidebarDecorator.js), o que o tira do Tab e faz o pane-splitter
+ * ignorar keydown e mousedown. Esta regra fica mesmo assim, de reserva: é o
+ * que segura o mouse se o atributo de raiz sobrar sem o decorador. */
 :root[unf-ui][unf-folder-rail] #folderPaneSplitter {
   pointer-events: none;
 }

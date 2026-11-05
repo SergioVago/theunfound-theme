@@ -13,10 +13,10 @@
  *    num trilho estreito só com a foto de cada conta de e-mail, com o número
  *    de não lidas da Entrada. O estado fica no xulstore e vale para todas as
  *    janelas. A largura salva não é tocada: o CSS sobrepõe a variável do
- *    splitter enquanto o atributo `unf-folder-rail` estiver na raiz, e o
- *    decorador solta o painel da trava de tamanho do #messagePaneSplitter
- *    (resize-lock-ids), que grava essa largura inline com !important e
- *    venceria a folha.
+ *    splitter enquanto `unf-folder-rail` estiver na raiz, o decorador solta o
+ *    painel da trava de tamanho do #messagePaneSplitter (resize-lock-ids),
+ *    que grava essa largura inline com !important e venceria a folha, e põe
+ *    `disabled` no #folderPaneSplitter, que no TB 159 o teclado também move.
  * Segue o protocolo de dono da 0.2.1: o experimento carrega este script como
  * window.UnfoundSkinDecorator, marca nele a instância dona (decorator.instance)
  * e o substitui/desinstala quando outra instância assume. Os atributos de raiz
@@ -271,9 +271,18 @@
     if (!folderPaneEl || !header) {
       return;
     }
-    // Restos de uma instância anterior que não conseguiu se desfazer.
+    // Restos de uma instância anterior que não conseguiu se desfazer. No
+    // splitter, um `disabled` com valor é sempre de uma instância (o
+    // Thunderbird o grava vazio), e o isDisabled da instância nunca é dele.
     for (const node of doc.querySelectorAll(`.${INJECTED}`)) {
       node.remove();
+    }
+    const staleSplitter = doc.getElementById("folderPaneSplitter");
+    if (staleSplitter) {
+      delete staleSplitter.isDisabled;
+      if (staleSplitter.getAttribute(SPLITTER_DISABLED)) {
+        staleSplitter.removeAttribute(SPLITTER_DISABLED);
+      }
     }
 
     const pane = {
@@ -444,6 +453,13 @@
     } catch (e) {
       // Documento já descarregado.
     }
+    // Também à parte: um splitter que ficasse desativado depois que o addon
+    // sai seria um painel de pastas que ninguém mais redimensiona.
+    try {
+      releaseFolderSplitter(pane);
+    } catch (e) {
+      // Documento já descarregado.
+    }
   }
 
   function applyPaneState(pane, moveFocus) {
@@ -451,11 +467,20 @@
     const focused = doc.activeElement;
     const inRail = rail.contains(focused);
     const inTree = !inRail && !!doc.getElementById("folderPane")?.contains(focused);
+    // O #folderPaneSplitter sai de alcance antes de o trilho estreitar o
+    // painel e só volta depois que ele tem a largura salva de novo: nunca há
+    // um instante em que o splitter responde medindo o trilho.
+    if (collapsed) {
+      holdFolderSplitter(pane);
+    }
     setOwnedAttribute(doc.documentElement, RAIL_ATTRIBUTE, collapsed);
     rail.hidden = !collapsed;
     // Com o atributo de raiz já no lugar — a largura do painel é a do modo
     // atual —, solta ou devolve a trava do splitter.
     syncSplitterLock(pane);
+    if (!collapsed) {
+      releaseFolderSplitter(pane);
+    }
     // O foco não pode ficar num elemento que acabou de sumir.
     try {
       if (collapsed && (moveFocus || inTree)) {
@@ -485,8 +510,10 @@
   // definida, o mínimo `auto` da trilha vira a largura salva e anula o máximo
   // do trilho que o CSS pede. No modo trilho tiramos "folderPane" da lista: o
   // próprio pane-splitter apaga o inline de quem sai dela, e a largura salva no
-  // xulstore não é tocada (quem grava lá é o evento splitter-resized, só no fim
-  // de um arrasto).
+  // xulstore não é tocada (quem grava lá é o evento splitter-resized, no fim de
+  // um arrasto ou, no TB 159, de um redimensionamento pelas setas — e é por
+  // isso que o #folderPaneSplitter fica desativado no modo trilho, ver
+  // holdFolderSplitter).
   //
   // Devolver a lista é mais delicado do que tirar, porque o Thunderbird remede
   // tudo quando ela volta e só trava se o que mediu bater com a largura salva:
@@ -566,11 +593,12 @@
    * Retrato do que o Thunderbird tinha travado pouco antes de o trilho soltar
    * o painel: o inline de cada painel da lista, mais o que diz se o retrato
    * ainda vale — o eixo da trava, o tamanho do painel de mensagem e a largura
-   * salva do painel de pastas (um arrasto de qualquer um dos dois no modo
-   * trilho muda esses números e aposenta o retrato). Só vale com o painel de
-   * pastas na largura salva: no modo trilho — janela que já abre recolhida,
-   * troca de layout — o inline é o da largura estreita ou nem existe, e
-   * devolvê-lo prenderia o painel no trilho.
+   * salva do painel de pastas (se um dos dois mudar no modo trilho — o
+   * painel de mensagem segue redimensionável pelo mouse e, no TB 159, pelas
+   * setas —, o retrato se aposenta). Só vale com o painel de pastas na
+   * largura salva: no modo trilho — janela que já abre recolhida, troca de
+   * layout — o inline é o da largura estreita ou nem existe, e devolvê-lo
+   * prenderia o painel no trilho.
    *
    * O retrato velho é jogado fora antes de qualquer teste: um retrato tirado
    * num estado válido não pode sobreviver para um estado em que ele é mentira
@@ -602,7 +630,8 @@
    * Faz o Thunderbird refazer a trava a partir dos tamanhos salvos, como o
    * pane-layout faz ao restaurar o xulstore (#setValues): destrava tudo,
    * remede e trava de novo. Nada é gravado no xulstore — lá só escreve o
-   * evento splitter-resized, no fim de um arrasto.
+   * evento splitter-resized, no fim de um arrasto ou de um redimensionamento
+   * pelas setas (TB 159).
    */
   function relockSize(splitter, property) {
     const size = splitter[property];
@@ -694,12 +723,13 @@
     // Painel de mensagem desligado (Exibir > Layout > painel de mensagens):
     // com o #messagePaneSplitter colapsado o Thunderbird destrava tudo de
     // propósito — o lock do #updateLockElements é `#resizeWithWindowActive &&
-    // !this.isCollapsed` (pane-splitter.js:144) — e não deixa um inline
-    // sequer. Então não há trava para guardar nem para devolver: a lista vai e
-    // volta sozinha, e o que estiver inline nos painéis da lista é mentira e
-    // sai. O retrato também, porque nesse estado nada mais vigia a geometria
-    // (a janela pode ser redimensionada sem mexer na largura do painel de
-    // mensagem, que é o que aposenta o retrato). Vale inclusive para o detach:
+    // !this.isCollapsed` no pane-splitter.js, ao reescrever resize-lock-ids e
+    // ao colapsar — e não deixa um inline sequer. Então não há trava para
+    // guardar nem para devolver: a lista vai e volta sozinha, e o que estiver
+    // inline nos painéis da lista é mentira e sai. O retrato também, porque
+    // nesse estado nada mais vigia a geometria (a janela pode ser
+    // redimensionada sem mexer na largura do painel de mensagem, que é o que
+    // aposenta o retrato). Vale inclusive para o detach:
     // escrever aqui deixaria para trás um inline que o Thunderbird não
     // escreveria nem apagaria. Quando o painel voltar, o splitter-expanded do
     // attach chama de novo — e aí o Thunderbird já travou no que mediu.
@@ -729,6 +759,93 @@
       return;
     }
     restoreSplitterLock(pane, splitter, wanted);
+  }
+
+  // ---------------------------------------------------------------------
+  // #folderPaneSplitter fora de alcance no modo trilho
+  //
+  // No modo trilho o splitter do painel de pastas mede a largura do trilho (o
+  // CSS sobrepõe a variável dele), e qualquer redimensionamento que chegue ao
+  // fim grava essa largura estreita como a largura salva do painel. A folha
+  // barra o mouse (pointer-events: none), mas no TB 159 o pane-splitter também
+  // é operável pelo teclado: tem tabIndex 0 e role=separator, as setas
+  // redimensionam (Shift, de 50 em 50px) e o keyup ou o blur disparam
+  // splitter-resized, que o pane-layout grava no xulstore. Com o trilho
+  // recolhido, Tab a partir da última conta caía no splitter, e uma seta
+  // gravava 60px: o painel voltava estreito em todas as janelas, e continuava
+  // assim depois de reiniciar.
+  //
+  // Enquanto o trilho estiver recolhido o splitter leva `disabled`, que o
+  // pane-splitter respeita nas duas versões: no 159 isDisabled o tira do Tab
+  // (tabIndex -1, aria-disabled) e faz keydown e mousedown voltarem sem fazer
+  // nada; no 158, que não tem teclado, barra o mousedown. O valor do atributo
+  // é o id da instância, como nos atributos de raiz.
+  //
+  // O Thunderbird também escreve esse atributo: o restoreState() do
+  // about3Pane.js faz `folderPaneSplitter.isDisabled = syntheticView` quando a
+  // aba abre (em geral depois do attach) e na restauração da sessão —
+  // desativado numa visão sintética, ativado no resto. É o estado que o
+  // splitter tem que ter quando o trilho expandir, e ele não pode apagar o
+  // nosso enquanto o trilho estiver recolhido. Por isso, nesse intervalo, o
+  // isDisabled da instância só anota o que o Thunderbird quer (e, como o
+  // tree.focus do attach, sai ao soltar), e um observador repõe o atributo se
+  // outro código o mexer direto.
+
+  const SPLITTER_DISABLED = "disabled";
+
+  function holdFolderSplitter(pane) {
+    const splitter = pane.doc.getElementById("folderPaneSplitter");
+    if (!splitter || pane.splitterHold) {
+      return;
+    }
+    const hold = {
+      splitter,
+      // O Thunderbird grava o atributo vazio (toggleAttribute); um valor não
+      // vazio é resto de outra instância e não diz o que ele quer.
+      wanted: splitter.getAttribute(SPLITTER_DISABLED) === "",
+      set(value) {
+        hold.wanted = !!value;
+      },
+      observer: new pane.win.MutationObserver(() => {
+        if (splitter.getAttribute(SPLITTER_DISABLED) !== owner()) {
+          hold.wanted = splitter.hasAttribute(SPLITTER_DISABLED);
+          splitter.setAttribute(SPLITTER_DISABLED, owner());
+        }
+      }),
+    };
+    pane.splitterHold = hold;
+    Object.defineProperty(splitter, "isDisabled", {
+      configurable: true,
+      // O mesmo getter do pane-splitter: é ele que o splitter consulta.
+      get() {
+        return this.hasAttribute(SPLITTER_DISABLED);
+      },
+      set: hold.set,
+    });
+    splitter.setAttribute(SPLITTER_DISABLED, owner());
+    hold.observer.observe(splitter, { attributeFilter: [SPLITTER_DISABLED] });
+  }
+
+  /** Devolve o splitter no estado que o Thunderbird quer para ele. */
+  function releaseFolderSplitter(pane) {
+    const hold = pane.splitterHold;
+    if (!hold) {
+      return;
+    }
+    pane.splitterHold = null;
+    const { splitter } = hold;
+    hold.observer.disconnect();
+    if (Object.getOwnPropertyDescriptor(splitter, "isDisabled")?.set === hold.set) {
+      delete splitter.isDisabled;
+    }
+    if (splitter.getAttribute(SPLITTER_DISABLED) !== owner()) {
+      return;
+    }
+    if (hold.wanted) {
+      splitter.setAttribute(SPLITTER_DISABLED, "");
+    } else {
+      splitter.removeAttribute(SPLITTER_DISABLED);
+    }
   }
 
   // ---------------------------------------------------------------------
@@ -890,8 +1007,8 @@
     // shiftKey fica DE FORA de propósito, e a razão importa: "ArrowUp",
     // "Home" e companhia são teclas nomeadas, então event.key não muda com
     // shift e Shift+seta CASA com o switch abaixo. O que torna isso seguro é
-    // só não existir binding de chrome ali: no omni.ja do TB 158, os únicos
-    // <key> em seta/Home/End são key_goStartPage (VK_HOME), o
+    // só não existir binding de chrome ali: nos omni.ja dos TB 158 e 159, os
+    // únicos <key> em seta/Home/End são key_goStartPage (VK_HOME), o
     // calendar-go-to-today-key (VK_END) e os dois
     // key_moveAttachmentBundle* da janela de composição (VK_UP/VK_DOWN),
     // todos modifiers="alt". Se uma versão futura acrescentar um com shift,
