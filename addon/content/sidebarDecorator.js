@@ -21,9 +21,12 @@
  * window.UnfoundSkinDecorator, marca nele a instância dona (decorator.instance)
  * e o substitui/desinstala quando outra instância assume. Os atributos de raiz
  * (unf-light-sidebar, unf-folder-rail) e o `disabled` do #folderPaneSplitter
- * levam o id dessa instância e, ao desinstalar, só saem se ainda forem dela.
- * Tudo é desfeito em uninstall(): nós, atributos, ouvintes, observadores e as
- * propriedades sobrepostas (folderTree.focus, folderPaneSplitter.isDisabled).
+ * levam o id dessa instância. Ao desinstalar, os de raiz só saem se ainda
+ * forem dela, e o `disabled` volta ao estado que o Thunderbird pediu (vazio
+ * numa visão sintética, ausente no resto), a menos que carregue o id de outra
+ * instância. Tudo é desfeito em uninstall(): nós, atributos, ouvintes,
+ * observadores e as propriedades sobrepostas (folderTree.focus,
+ * folderPaneSplitter.isDisabled).
  */
 
 "use strict";
@@ -293,7 +296,8 @@
     }
     // Restos de uma instância anterior que não conseguiu se desfazer. No
     // splitter, um `disabled` com valor é sempre de uma instância (o
-    // Thunderbird o grava vazio), e o isDisabled da instância nunca é dele.
+    // Thunderbird o grava vazio), e um isDisabled próprio no elemento nunca é
+    // dele (o do Thunderbird mora em PaneSplitter.prototype).
     for (const node of doc.querySelectorAll(`.${INJECTED}`)) {
       node.remove();
     }
@@ -406,6 +410,16 @@
       pane.listen(folderSplitter, "splitter-expanded", () => {
         if (active && panes.get(win) === pane) {
           syncSplitterLock(pane);
+        }
+      });
+      // Com o splitter retido, o foco que chegar a ele vai para o trilho. No
+      // 159 o tabIndex -1 o tira do Tab, não do focus(): o tabmail guarda o
+      // elemento focado ao trocar de aba (tabInfo.lastActiveElement) e o foca
+      // na volta, e o foco ficaria num separador desativado debaixo do
+      // trilho. No 158 o splitter não recebe foco.
+      pane.listen(folderSplitter, "focus", () => {
+        if (active && panes.get(win) === pane && pane.splitterHold) {
+          pane.expand.focus();
         }
       });
     }
@@ -825,10 +839,11 @@
   // desativado numa visão sintética, ativado no resto. É o estado que o
   // splitter tem que ter quando o trilho expandir, e ele não pode apagar o
   // nosso enquanto o trilho estiver recolhido. Por isso, nesse intervalo, o
-  // isDisabled da instância responde sempre que sim e o setter só anota o que
-  // o Thunderbird quer, que releaseFolderSplitter aplica ao soltar (e, como o
-  // tree.focus do attach, a propriedade sai). No 158 e no 159 esse setter é o
-  // único caminho pelo qual o Thunderbird escreve o atributo nesse splitter.
+  // isDisabled próprio do splitter (ver holdFolderSplitter) responde sempre
+  // que sim e o setter só anota o que o Thunderbird quer, que
+  // releaseFolderSplitter aplica ao soltar (e, como o tree.focus do attach, a
+  // propriedade sai). No 158 e no 159 esse setter é o único caminho pelo qual
+  // o Thunderbird escreve o atributo nesse splitter.
   //
   // O disabled não encerra um redimensionamento já em andamento: no 159 o
   // keyup ou o blur o terminam sem olhar isDisabled e medem o painel naquele
@@ -855,7 +870,7 @@
         if (active && pane.splitterHold === hold) {
           hold.wanted = !!value;
         } else {
-          this.toggleAttribute(SPLITTER_DISABLED, !!value);
+          Reflect.set(Object.getPrototypeOf(this), "isDisabled", value, this);
         }
       },
     };
@@ -874,7 +889,10 @@
       // isDisabled. Numa instância que já saiu, é o getter do próprio
       // pane-splitter.
       get() {
-        return (active && pane.splitterHold === hold) || this.hasAttribute(SPLITTER_DISABLED);
+        if (active && pane.splitterHold === hold) {
+          return true;
+        }
+        return Reflect.get(Object.getPrototypeOf(this), "isDisabled", this);
       },
       set: hold.set,
     });
