@@ -391,7 +391,11 @@
  * enquanto o trilho estiver recolhido (ver holdFolderSplitter em
  * content/sidebarDecorator.js), o que o tira do Tab e faz o pane-splitter
  * ignorar keydown e mousedown. Esta regra fica mesmo assim, de reserva: é o
- * que segura o mouse se o atributo de raiz sobrar sem o decorador. */
+ * que segura o mouse se o atributo de raiz sobrar sem o decorador (sem ela,
+ * um arrasto gravaria 60px). Por causa dela, clique e arrasto na faixa do
+ * splitter caem no que está embaixo — a borda da lista de mensagens, que o
+ * splitter cobre em 4px —, o que bate com o que se vê ali: sem cursor de
+ * redimensionar, aquela faixa é da lista. */
 :root[unf-ui][unf-folder-rail] #folderPaneSplitter {
   pointer-events: none;
 }

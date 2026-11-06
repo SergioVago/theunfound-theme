@@ -98,20 +98,23 @@
   }
 
   /**
-   * Liga/desliga um atributo de raiz deste decorador. Enquanto ativo, ele é o
-   * único decorador da janela e manda nesses atributos; ao desinstalar
-   * (`onlyOwned`), só remove os que ainda carregam o id da sua instância.
+   * Liga/desliga um atributo com o id da instância dona: os de raiz
+   * (unf-light-sidebar, unf-folder-rail) e o `disabled` do #folderPaneSplitter
+   * no modo trilho. Ligar sempre grava o id desta instância; ao desinstalar
+   * (`onlyOwned`), só remove os que ainda carregam esse id. O `disabled` do
+   * splitter só é ligado por aqui: quem o devolve é releaseFolderSplitter, no
+   * estado que o Thunderbird quer para ele.
    */
-  function setOwnedAttribute(root, name, on, onlyOwned = false) {
-    if (!root) {
+  function setOwnedAttribute(node, name, on, onlyOwned = false) {
+    if (!node) {
       return;
     }
     if (on) {
-      if (root.getAttribute(name) != owner()) {
-        root.setAttribute(name, owner());
+      if (node.getAttribute(name) != owner()) {
+        node.setAttribute(name, owner());
       }
-    } else if (!onlyOwned || root.getAttribute(name) == owner()) {
-      root.removeAttribute(name);
+    } else if (!onlyOwned || node.getAttribute(name) == owner()) {
+      node.removeAttribute(name);
     }
   }
 
