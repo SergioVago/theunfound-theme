@@ -20,9 +20,10 @@
  * Segue o protocolo de dono da 0.2.1: o experimento carrega este script como
  * window.UnfoundSkinDecorator, marca nele a instância dona (decorator.instance)
  * e o substitui/desinstala quando outra instância assume. Os atributos de raiz
- * (unf-light-sidebar, unf-folder-rail) levam o id dessa instância e, ao
- * desinstalar, só saem se ainda forem dela. Tudo é desfeito em uninstall():
- * nós, atributos, ouvintes e observadores.
+ * (unf-light-sidebar, unf-folder-rail) e o `disabled` do #folderPaneSplitter
+ * levam o id dessa instância e, ao desinstalar, só saem se ainda forem dela.
+ * Tudo é desfeito em uninstall(): nós, atributos, ouvintes, observadores e as
+ * propriedades sobrepostas (folderTree.focus, folderPaneSplitter.isDisabled).
  */
 
 "use strict";
@@ -115,6 +116,20 @@
       }
     } else if (!onlyOwned || node.getAttribute(name) == owner()) {
       node.removeAttribute(name);
+    }
+  }
+
+  /**
+   * Devolve ao #folderPaneSplitter o `disabled` que o Thunderbird quer, na
+   * forma que o toggleAttribute do pane-splitter grava (vazio ou ausente). O
+   * próprio toggleAttribute não serve: ligado, ele não troca um valor já
+   * presente (o id de uma instância).
+   */
+  function giveSplitterDisabled(splitter, disabled) {
+    if (disabled) {
+      splitter.setAttribute(SPLITTER_DISABLED, "");
+    } else {
+      splitter.removeAttribute(SPLITTER_DISABLED);
     }
   }
 
@@ -282,20 +297,16 @@
     for (const node of doc.querySelectorAll(`.${INJECTED}`)) {
       node.remove();
     }
-    const staleSplitter = doc.getElementById("folderPaneSplitter");
-    if (staleSplitter) {
-      delete staleSplitter.isDisabled;
+    const folderSplitter = doc.getElementById("folderPaneSplitter");
+    if (folderSplitter) {
+      delete folderSplitter.isDisabled;
       // O que o Thunderbird queria para o splitter morreu com a instância (o
       // valor só diz de quem era) e é refeito pela visão da aba: o
       // restoreState() o desativa numa visão sintética. isSynthetic é quase,
       // não exatamente, o que o restoreState() grava ao abrir a aba: a visão
       // pode mudar depois sem que ele grave de novo.
-      if (staleSplitter.getAttribute(SPLITTER_DISABLED)) {
-        if (win.gViewWrapper?.isSynthetic) {
-          staleSplitter.setAttribute(SPLITTER_DISABLED, "");
-        } else {
-          staleSplitter.removeAttribute(SPLITTER_DISABLED);
-        }
+      if (folderSplitter.getAttribute(SPLITTER_DISABLED)) {
+        giveSplitterDisabled(folderSplitter, !!win.gViewWrapper?.isSynthetic);
       }
     }
 
@@ -391,7 +402,6 @@
     // Com o painel fechado pelo splitter (F9) a trava fica como está — o
     // Thunderbird não sabe medir um painel em display:none (ver
     // syncSplitterLock). A sincronia espera o painel voltar.
-    const folderSplitter = doc.getElementById("folderPaneSplitter");
     if (folderSplitter) {
       pane.listen(folderSplitter, "splitter-expanded", () => {
         if (active && panes.get(win) === pane) {
@@ -493,10 +503,15 @@
     setOwnedAttribute(doc.documentElement, RAIL_ATTRIBUTE, collapsed);
     rail.hidden = !collapsed;
     // Com o atributo de raiz já no lugar — a largura do painel é a do modo
-    // atual —, solta ou devolve a trava do splitter.
-    syncSplitterLock(pane);
-    if (!collapsed) {
-      releaseFolderSplitter(pane);
+    // atual —, solta ou devolve a trava do splitter. O splitter volta mesmo se
+    // a trava falhar: o trilho já saiu, e um splitter preso seria um painel de
+    // pastas que nem o mouse redimensiona até o próximo recolher/expandir.
+    try {
+      syncSplitterLock(pane);
+    } finally {
+      if (!collapsed) {
+        releaseFolderSplitter(pane);
+      }
     }
     // O foco não pode ficar num elemento que acabou de sumir.
     try {
@@ -810,12 +825,10 @@
   // desativado numa visão sintética, ativado no resto. É o estado que o
   // splitter tem que ter quando o trilho expandir, e ele não pode apagar o
   // nosso enquanto o trilho estiver recolhido. Por isso, nesse intervalo, o
-  // isDisabled da instância responde sempre que sim e só anota o que o
-  // Thunderbird quer (e, como o tree.focus do attach, sai ao soltar), e um
-  // observador repõe o atributo se outro código o tirar ou o deixar vazio, as
-  // formas que o Thunderbird grava. Um valor não vazio é de outra instância:
-  // o splitter segue desativado, e brigar por ele com o observador dela seria
-  // um laço sem fim de microtasks.
+  // isDisabled da instância responde sempre que sim e o setter só anota o que
+  // o Thunderbird quer, que releaseFolderSplitter aplica ao soltar (e, como o
+  // tree.focus do attach, a propriedade sai). No 158 e no 159 esse setter é o
+  // único caminho pelo qual o Thunderbird escreve o atributo nesse splitter.
   //
   // O disabled não encerra um redimensionamento já em andamento: no 159 o
   // keyup ou o blur o terminam sem olhar isDisabled e medem o painel naquele
@@ -837,36 +850,35 @@
       // O Thunderbird grava o atributo vazio (toggleAttribute); um valor não
       // vazio é resto de outra instância e não diz o que ele quer.
       wanted: splitter.getAttribute(SPLITTER_DISABLED) == "",
+      // Numa instância que já saiu sem soltar, é o setter do pane-splitter.
       set(value) {
-        hold.wanted = !!value;
+        if (active && pane.splitterHold === hold) {
+          hold.wanted = !!value;
+        } else {
+          this.toggleAttribute(SPLITTER_DISABLED, !!value);
+        }
       },
-      observer: new pane.win.MutationObserver(() => {
-        if (!active || pane.splitterHold !== hold) {
-          return;
-        }
-        const value = splitter.getAttribute(SPLITTER_DISABLED);
-        if (value == null || value == "") {
-          hold.wanted = value != null;
-          setOwnedAttribute(splitter, SPLITTER_DISABLED, true);
-        }
-      }),
     };
     pane.splitterHold = hold;
+    // Propriedade própria deste #folderPaneSplitter, por cima do acessor de
+    // PaneSplitter.prototype (que não é tocado): o setter guarda em
+    // hold.wanted o que o Thunderbird pede (restoreState) e
+    // releaseFolderSplitter o aplica e apaga a propriedade; o attach apaga a
+    // de uma instância que morreu sem soltar.
     Object.defineProperty(splitter, "isDisabled", {
       configurable: true,
       // O pane-splitter consulta isDisabled no keydown, no mousedown e ao
-      // escolher o tabIndex. Enquanto o hold vale, a resposta é sim mesmo sem
-      // o atributo: entre alguém tirá-lo e o observador o repor (uma
-      // microtask depois), uma seta no mesmo task começaria um
-      // redimensionamento que o keyup termina sem olhar isDisabled. Numa
-      // instância que já saiu, é o getter do próprio pane-splitter.
+      // escolher o tabIndex no 159 (no 158, só no mousedown). Enquanto o hold
+      // vale, a resposta é sim mesmo que outro código tire o atributo: uma
+      // seta começaria um redimensionamento que o keyup termina sem olhar
+      // isDisabled. Numa instância que já saiu, é o getter do próprio
+      // pane-splitter.
       get() {
         return (active && pane.splitterHold === hold) || this.hasAttribute(SPLITTER_DISABLED);
       },
       set: hold.set,
     });
     setOwnedAttribute(splitter, SPLITTER_DISABLED, true);
-    hold.observer.observe(splitter, { attributeFilter: [SPLITTER_DISABLED] });
   }
 
   /** Devolve o splitter no estado que o Thunderbird quer para ele. */
@@ -877,18 +889,23 @@
     }
     pane.splitterHold = null;
     const { splitter } = hold;
-    hold.observer.disconnect();
     if (Object.getOwnPropertyDescriptor(splitter, "isDisabled")?.set === hold.set) {
       delete splitter.isDisabled;
     }
-    if (splitter.getAttribute(SPLITTER_DISABLED) != owner()) {
+    // Um valor com outro id não é nosso nem do Thunderbird: fica como está.
+    const value = splitter.getAttribute(SPLITTER_DISABLED);
+    if (value && value != owner()) {
       return;
     }
-    if (hold.wanted) {
-      splitter.setAttribute(SPLITTER_DISABLED, "");
-    } else {
-      splitter.removeAttribute(SPLITTER_DISABLED);
-    }
+    // Se outro código tirou ou esvaziou o atributo durante o hold, o
+    // pane-splitter recalculou tabIndex e aria-disabled com o getter acima
+    // (desativado), e o que vale é o que o Thunderbird pediu pelo setter.
+    // Repor o nosso antes faz da devolução uma mudança de verdade, que ele
+    // recalcula com o próprio getter. Sem isso, até o próximo
+    // recolher/expandir, o splitter ficava fora do Tab e anunciado como
+    // desativado (atributo tirado) ou desativado de fato (atributo vazio).
+    setOwnedAttribute(splitter, SPLITTER_DISABLED, true);
+    giveSplitterDisabled(splitter, hold.wanted);
   }
 
   // ---------------------------------------------------------------------
