@@ -78,20 +78,23 @@ jobs:
 
   # OPCIONAL / segunda fase: o harness do tools/ em headless.
   # O tbctl.py ja sobe o Thunderbird com MOZ_HEADLESS=1 e --headless, entao
-  # nao precisa de xvfb. Falta so o binario e um user.js de perfil.
+  # nao precisa de xvfb, e com MOZ_REMOTE_ALLOW_SYSTEM_ACCESS=1, sem o qual o
+  # Marionette da 159 nao entra no contexto chrome (a flag
+  # --remote-allow-system-access, que ele tambem passa, saiu na 159). Falta so
+  # o binario e um user.js de perfil.
   smoke-marionette:
     runs-on: ubuntu-24.04
     if: false   # ligue quando o passo de perfil estiver no repo
     steps:
       - uses: actions/checkout@v4
 
-      # strict_max_version do manifest e "158.*": o smoke roda na 158, a maior
+      # strict_max_version do manifest e "159.*": o smoke roda na 159, a maior
       # versao suportada. Ao subir o teto do manifest, suba tambem esta URL.
-      - name: Baixar o Thunderbird 158 (tarball oficial, sem snap/flatpak)
+      - name: Baixar o Thunderbird 159 (tarball oficial, sem snap/flatpak)
         run: |
           set -euo pipefail
           curl -fsSL -o tb.tar.xz \
-            "https://download.mozilla.org/?product=thunderbird-158.0-SSL&os=linux64&lang=en-US"
+            "https://download.mozilla.org/?product=thunderbird-159.0-SSL&os=linux64&lang=en-US"
           mkdir -p "$RUNNER_TEMP/tb" && tar -xJf tb.tar.xz -C "$RUNNER_TEMP/tb" --strip-components=1
           echo "TB_BIN=$RUNNER_TEMP/tb/thunderbird" >> "$GITHUB_ENV"
 

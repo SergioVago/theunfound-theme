@@ -1,6 +1,6 @@
 # theUnfound Theme
 
-Addon que recria no **Thunderbird 158** o visual do Spark Mail (Spark
+Addon que recria no **Thunderbird 158 e 159** o visual do Spark Mail (Spark
 Desktop 3, da Readdle): barra lateral escura em grafite com seleção em
 "pílula" azul (ou clara, se preferir), painel de pastas que se recolhe num
 trilho só com as fotos das contas, lista de mensagens com avatar, remetente em
@@ -19,6 +19,29 @@ addon.
 
 Mais capturas em [`screenshots/`](screenshots/): trilho de contas, barra
 clara e a página de opções.
+
+## Novidades da 0.4.2
+
+- **Thunderbird 159:** o addon passa a aceitar o Thunderbird 159
+  (`strict_max_version` em `159.*`). Conferido na 159.0: tudo o que o tema
+  usa do Thunderbird continua lá, e as capturas saem iguais às da 158 — a
+  única diferença visível é o texto do corpo da mensagem no tema escuro, um
+  pouco mais claro, que vem da paleta nova do próprio Thunderbird.
+- **Divisor do painel de pastas no trilho:** no Thunderbird 159 o divisor
+  entre o painel de pastas e a lista passou a responder ao teclado. Com o
+  trilho recolhido, Tab a partir da última conta caía nele, e uma seta
+  gravava a largura do trilho como a largura do painel: ao expandir, o painel
+  voltava estreito (100 px), e continuava assim depois de reiniciar. Agora,
+  enquanto o trilho está recolhido, o divisor fica desativado — sai do Tab e
+  não responde às setas nem ao mouse; o foco que cairia nele vai para o botão
+  de expandir — e volta ao normal ao expandir o trilho ou desativar o addon.
+- **Painel de pastas que não obedecia ao divisor:** no layout vertical, sem
+  largura salva do painel de mensagem (o padrão do Thunderbird), recolher e
+  expandir o trilho deixava o painel de pastas preso na largura salva, e
+  arrastar o divisor não mudava nada até a aba recarregar. Já acontecia na
+  0.4.1.
+- **Nenhuma mudança de aparência:** as folhas de estilo só ganharam
+  comentários.
 
 ## Novidades da 0.4.1
 
@@ -257,9 +280,9 @@ Em **Extensões e temas › theUnfound Theme para Thunderbird › Preferências*
 - **Fonte proporcional em mensagens de texto simples.**
 - **Usar cartões e 3 colunas:** o visual foi pensado para a visualização em
   cartões (3 linhas) e o layout vertical (pastas | lista | leitura), que já são
-  o padrão do Thunderbird 158. Se você tiver mudado isso, o botão volta essas
-  três preferências do Thunderbird para esses valores. O addon não altera
-  nenhuma preferência sem você clicar nele.
+  o padrão do Thunderbird 158 e do 159. Se você tiver mudado isso, o botão
+  volta essas três preferências do Thunderbird para esses valores. O addon não
+  altera nenhuma preferência sem você clicar nele.
 
 Dica: o campo de busca central é a **pesquisa global** do Thunderbird, que só
 aparece com o indexador ligado (**Configurações › Geral**, seção de pesquisa e
@@ -273,7 +296,7 @@ contas numa coluna só e deixa a barra lateral ainda mais limpa.
 O addon é uma WebExtension (Manifest V3) com uma *Experiment API*
 (`experiments/unfoundTheme/`) que roda com privilégios do Thunderbird:
 
-- No Thunderbird 158 cada parte da janela é um documento separado:
+- No Thunderbird 158 e no 159 cada parte da janela é um documento separado:
   `messenger.xhtml` (barra unificada, barra de áreas, abas), `about:3pane`
   (pastas, lista, moldura da leitura) dentro de cada aba de e-mail,
   `about:message` (cabeçalho da mensagem), o corpo da mensagem, a janela de
@@ -299,7 +322,11 @@ O addon é uma WebExtension (Manifest V3) com uma *Experiment API*
   é montado dentro de `#folderPane`; recolhido, um atributo na raiz de
   `about:3pane` faz o CSS esconder a árvore e sobrepor, com `!important`, a
   variável de largura que o splitter grava no `<body>` — a largura salva pelo
-  Thunderbird nunca muda. As não lidas vêm de um ouvinte de pastas
+  Thunderbird não é tocada. Para que nenhum redimensionamento a grave
+  estreita, o splitter do painel de pastas fica com `disabled` enquanto o
+  trilho está recolhido (no Thunderbird 159 ele também responde às setas, e
+  mediria o trilho), e o decorador o devolve no estado que o Thunderbird quer
+  ao expandir ou ao desativar o addon. As não lidas vêm de um ouvinte de pastas
   (`MailServices.mailSession`), as contas de observadores de preferências e as
   fotos do catálogo de observadores do catálogo; o estado recolhido fica no
   xulstore.
@@ -346,13 +373,14 @@ LICENSE                         Mozilla Public License 2.0
 
 ## Limitações conhecidas
 
-- Testado só no Thunderbird 158 (Linux, Fedora). Os seletores dependem da
-  estrutura interna do Thunderbird e podem precisar de ajustes em versões
-  futuras. O `strict_min_version` é 140 (ESR), mas versões antigas não foram
-  testadas. Como o addon usa uma *Experiment API*, o Thunderbird exige um
-  `strict_max_version`: ele está em `158.*`. Ao atualizar o Thunderbird para
-  uma versão maior, suba esse número em `addon/manifest.json` e gere o `.xpi`
-  de novo — `scripts/build.sh` recusa empacotar sem ele.
+- Testado no Thunderbird 158 (Linux, Fedora) e no 159 (Linux, build oficial
+  da Mozilla). Os seletores dependem da estrutura interna do Thunderbird e
+  podem precisar de ajustes em versões futuras. O `strict_min_version` é 140
+  (ESR), mas versões antigas não foram testadas. Como o addon usa uma
+  *Experiment API*, o Thunderbird exige um `strict_max_version`: ele está em
+  `159.*`. Ao atualizar o Thunderbird para uma versão maior, suba esse número
+  em `addon/manifest.json` e gere o `.xpi` de novo — `scripts/build.sh` recusa
+  empacotar sem ele.
 - O visual é uma recriação com CSS próprio — nenhum ícone, fonte ou imagem de
   outro programa é usado. Os ícones continuam os do Thunderbird.
 - Não acrescenta nenhum recurso de triagem (caixa de entrada inteligente,
@@ -393,7 +421,8 @@ LICENSE                         Mozilla Public License 2.0
   locais mostram a Entrada global. A foto escolhida nas opções é guardada pela
   chave interna da conta (`accountN`): se a conta for apagada e outra criada
   com a mesma chave, ela herda a foto. Enquanto o painel está recolhido, o
-  splitter não pode ser arrastado.
+  splitter não pode ser arrastado nem, no Thunderbird 159, movido pelas
+  setas: ele volta ao expandir.
 - **Auto Profile Picture:** convivência testada com a versão 2.6.0 — quando ele
   tem foto ou logo, ela ocupa o lugar do nosso avatar (mesmo tamanho, sempre
   redondo); quando só tem iniciais, fica o nosso. O formato "quadrado" ou
@@ -415,7 +444,11 @@ tools/dev.sh stop
 ```
 
 - `tools/tbctl.py` — driver Marionette sem dependências (`launch`, `exec` com
-  `await` e `--args`, `shot` com `--window-type`/`--size`, `quit`).
+  `await` e `--args`, `shot` com `--window-type`/`--size`, `quit`). Sobe
+  `/usr/bin/thunderbird`, ou o binário de `TB_BIN=`, com
+  `MOZ_REMOTE_ALLOW_SYSTEM_ACCESS=1`: no Thunderbird 159 o Marionette só roda
+  script com privilégio com essa variável, porque a flag
+  `--remote-allow-system-access`, que o 158 aceita, deixou de existir.
 - `tools/seed-profile.js` — cria uma conta POP fictícia (sem rede) e ~25
   mensagens realistas em português.
 - `tools/seed-senders.js` — contatos no catálogo (pessoal e "Endereços
@@ -425,8 +458,9 @@ tools/dev.sh stop
   e 7 não lidas), uma conta de feeds (fica fora do trilho) e um contato com
   foto para o e-mail de uma delas.
 - `tools/dev-scene.js`, `tools/dev-addon.js`, `tools/dev.sh` — cena de
-  screenshot e instalação/recarga do addon (`PORT=` e `PROFILE=` trocam a
-  porta e o perfil; o log fica em `<perfil>/tb.log`). Com
+  screenshot e instalação/recarga do addon (`PORT=`, `PROFILE=` e `LOG=`
+  trocam a porta, o perfil e o log, que por padrão fica em
+  `<perfil>/tb.log`). Com
   `{"action": "xpi", "dir": "/caminho/addon.xpi"}`, o `dev-addon.js` instala
   um `.xpi` como "Instalar de um arquivo…" — para testar atualização por cima
   de outra versão (`"id"` instala outros addons, ex.: Auto Profile Picture).

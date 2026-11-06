@@ -85,7 +85,7 @@ COMPATIBILITY — PLEASE READ FIRST
 The add-on uses an Experiment API, the only way to style Thunderbird's own windows. That
 comes at a price: Thunderbird requires a declared maximum version, and newer Thunderbird
 releases can change the interface internally. This version declares support for
-Thunderbird 140 to 158. When 159 ships, the add-on will need an update — so if the look
+Thunderbird 140 to 159. When 160 ships, the add-on will need an update — so if the look
 disappears after a Thunderbird upgrade, that is why, and not a broken profile.
 
 

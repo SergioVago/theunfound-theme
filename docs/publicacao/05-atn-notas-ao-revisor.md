@@ -4,10 +4,10 @@ Cole a versão **en-US** — os revisores da ATN são internacionais. A versão 
 abaixo, caso prefira.
 
 **Antes de colar:** confirme que `https://github.com/SergioVago/theunfound-theme` já existe e está
-público, e que a tag `v0.4.1` existe e está pública.
+público, e que a tag `v0.4.2` existe e está pública.
 
 Os nomes de arquivo, contagens de linha e números de linha abaixo foram **re-derivados do
-código da 0.4.1** neste worktree (`wc -l`, `grep -n`), depois da renomeação interna
+código da 0.4.2** neste worktree (`wc -l`, `grep -n`), depois da renomeação interna
 (`sparkUI` → `unfoundTheme`, `spk-*` → `unf-*`), da remoção do código de compatibilidade
 com as versões 0.1.0/0.2.0 e do acréscimo dos cabeçalhos MPL (que deslocaram três linhas em
 cada arquivo). Se mexer no código antes de submeter, re-derive de novo:
@@ -20,9 +20,9 @@ divergência entre nota e código custa uma rodada de revisão.
 ```
 Hello, and thank you for reviewing.
 
-theUnfound Theme 0.4.1 is a pure appearance add-on: it restyles Thunderbird's own windows
+theUnfound Theme 0.4.2 is a pure appearance add-on: it restyles Thunderbird's own windows
 and adds no features, no accounts, no network code. Full source, including this exact
-version, is public at https://github.com/SergioVago/theunfound-theme (tag v0.4.1). The .xpi
+version, is public at https://github.com/SergioVago/theunfound-theme (tag v0.4.2). The .xpi
 is a plain zip of the addon/ directory produced by scripts/build.sh, plus the full MPL 2.0
 LICENSE text at the package root — nothing is minified, bundled, generated or obfuscated,
 so the files in the .xpi are byte-for-byte the files in the repository.
@@ -30,6 +30,10 @@ so the files in the .xpi are byte-for-byte the files in the repository.
 This is a first submission under a new add-on ID (theme@theunfound.com.br), so there is no
 existing installed base: nobody receives this version as an update, and there is no
 migration path to test.
+
+What 0.4.2 changes since 0.4.1: strict_max_version goes from "158.*" to "159.*" (see 6),
+and sidebarDecorator.js gets two fixes around the folder pane splitter, both described
+under 2. The stylesheets changed in comments only, and no other file in addon/ changed.
 
 1. WHY AN EXPERIMENT API
 
@@ -74,8 +78,8 @@ It:
     older version cannot strip the newer version's styling (this bit is documented in the
     comment at the top of the file, lines 21-30).
 
-addon/skin/*.css (2,244 lines total across 7 files: about3pane.css 851, aboutMessage.css
-339, sidebar.css 573, messenger.css 194, tokens.css 136, compose.css 127,
+addon/skin/*.css (2,260 lines total across 7 files: about3pane.css 851, aboutMessage.css
+339, sidebar.css 589, messenger.css 194, tokens.css 136, compose.css 127,
 messageContent.css 24) — plain CSS, loaded as author sheets. The only URLs in them are
 inline data:image/svg+xml icons and one relative @import url("tokens.css") at the top of
 about3pane.css, aboutMessage.css, messenger.css and compose.css; no @font-face, no remote
@@ -87,10 +91,27 @@ sender formatting, and puts the original function back on shutdown. The preview 
 hdr.getStringProperty("preview") (lines 276 and 348), i.e. the snippet Thunderbird itself
 already stores in the message database; the add-on never opens or fetches a message body.
 
-addon/content/sidebarDecorator.js (1,114 lines) — builds the account rail, keeps its
-collapsed state in Services.xulStore (lines 218 and 226 — the same place Thunderbird keeps
+addon/content/sidebarDecorator.js (1,309 lines) — builds the account rail, keeps its
+collapsed state in Services.xulStore (lines 241 and 249 — the same place Thunderbird keeps
 window layout state) and listens to folder/unread changes through
-MailServices.mailSession.AddFolderListener (line 1036, removed at line 1083).
+MailServices.mailSession.AddFolderListener (line 1231, removed at line 1278).
+
+While the rail is collapsed, it also holds Thunderbird's #folderPaneSplitter
+(holdFolderSplitter, line 854). In rail mode that splitter measures the 60px rail, and
+Thunderbird 159 made it keyboard-operable (bug 2065288): with the rail collapsed, Tab and
+one arrow key would save 60px as the folder pane width in Thunderbird's own xulstore entry,
+and the pane would reopen narrow. During the hold the decorator sets the splitter's
+"disabled" attribute (its value is the instance id) and defines an own isDisabled accessor
+on that one element (line 883), over PaneSplitter.prototype's, which is left untouched:
+the getter answers true, and the setter only records what Thunderbird's restoreState()
+asks for. releaseFolderSplitter (line 903) deletes the own property and puts back the
+disabled state Thunderbird asked for. It runs when the rail expands and in detach() (line
+497), which uninstall() (line 1268) runs for every decorated tab, so disabling the add-on
+undoes both. attach() clears what an instance that failed to clean up left on the
+splitter (lines 304-315). The decorator already overrode folderTree.focus the same way in
+0.4.1, so that F6 reaches the rail (line 446). The second fix: restoreSplitterLock (line
+708) no longer writes an inline width on #folderPane when Thunderbird has no size lock to
+redo, which left the expanded pane deaf to its splitter until the tab reloaded.
 
 addon/content/messageDecorator.js (221 lines) — rearranges the about:message header and,
 for the suspicious-sender badge, reads the open message's own Authentication-Results
@@ -141,12 +162,14 @@ library is bundled, so there is no VENDORS.md / library reference to check.
 
 5. HOW TO TEST IN TWO MINUTES
 
-  1. Fresh profile, Thunderbird 140-158, any account (an offline local folder account is
+  1. Fresh profile, Thunderbird 140-159, any account (an offline local folder account is
      enough — no mail needs to be fetched).
   2. Install the .xpi. The UI changes immediately, no restart: the folder pane and spaces
      toolbar turn graphite, the message list shows avatars and a preview line.
   3. Click the collapse button at the top of the folder pane: the pane becomes a narrow
-     rail with one photo/initials circle per account. Click it again to expand.
+     rail with one photo/initials circle per account, and the folder pane splitter is
+     disabled — neither the mouse nor, on 159, Tab and the arrow keys reach it. Click the
+     button again to expand.
   4. Add-on Options: switch Theme to Light/Dark, turn avatars or the preview line off —
      every change applies live. The "Use cards and 3 columns" button is the only control
      that touches Thunderbird's own preferences.
@@ -155,10 +178,17 @@ library is bundled, so there is no VENDORS.md / library reference to check.
 
 6. ABOUT strict_max_version
 
-browser_specific_settings.gecko.strict_max_version is "158.*" because Thunderbird requires
+browser_specific_settings.gecko.strict_max_version is "159.*" because Thunderbird requires
 a strict maximum version for add-ons that use an Experiment API, and because the add-on
 reads Thunderbird's internal DOM, which can change between major releases. I will ship an
 updated version for each new Thunderbird release.
+
+0.4.2 raises it from "158.*" after checking the add-on on Thunderbird 159.0: it installs
+and stays active, none of the selectors it relies on lost its match, the WebExtension and
+Experiments framework modules are byte-identical to 158's, and the screenshots are
+visually identical to 158's apart from the dark message-body text, which follows
+Thunderbird's own new palette. The one functional difference that check found is the
+keyboard-operable splitter handled under 2.
 
 ATN's own validator, on the 0.4.0 upload, reported 0 errors, 56 warnings and 1 notice. All
 56 warnings were the same message, "Invalid nesting of selectors found": they were native
@@ -171,13 +201,14 @@ about a defect. The single notice was the "strict_max_version not required" one 
 above, and nothing else came up: no MANIFEST_FIELD_PRIVILEGED, no UNSUPPORTED_API, no
 MISSING_DATA_COLLECTION_PERMISSIONS.
 
-0.4.1, the version in front of you, is that same CSS rewritten without nesting: all 208
-nesting sites in the eight stylesheets were lowered by replacing every "&" with its parent
-selector, expanding the parent lists. No :is() was introduced, and no effective selector
-and no declaration changed, so the add-on looks exactly as 0.4.0 did. Since not one nested
-selector is left, those 56 warnings have nothing left to match, so the only finding I
-expect from this upload is the strict_max_version notice. I have not uploaded 0.4.1 yet,
-though, so that is what the change implies, not something I have measured.
+0.4.1 rewrote that same CSS without nesting: all 208 nesting sites in the eight
+stylesheets were lowered by replacing every "&" with its parent selector, expanding the
+parent lists. No :is() was introduced, and no effective selector and no declaration
+changed, so the add-on looks exactly as 0.4.0 did. 0.4.2, the version in front of you,
+keeps that CSS: its stylesheet changes are comments only. Since not one nested selector is
+left, those 56 warnings have nothing left to match, so the only finding I expect from this
+upload is the strict_max_version notice. I have not uploaded 0.4.1 or 0.4.2 yet, though,
+so that is what the change implies, not something I have measured.
 
 Two checks stand behind the claim that the rewrite changed nothing. Across all eight
 stylesheets, the ordered sequence of (at-rule, selector, declarations) in the flattened
@@ -188,7 +219,7 @@ the nested build and the flattened one — that one covers every stylesheet the 
 load, which is all of them but options.css.
 
 On validation, so you know I am not surprised by it either: the public addons-linter (the
-Firefox JS edition, v10), which my CI runs, gives a different output on the 0.4.1 package
+Firefox JS edition, v10), which my CI runs, gives a different output on the 0.4.2 package
 you have in front of you. It is a Firefox tool and does not know Thunderbird's experiment
 APIs, so on this .xpi it reports MANIFEST_FIELD_PRIVILEGED for /experiment_apis
 ("privileged manifest fields are only allowed in privileged extensions"), four
@@ -220,10 +251,10 @@ Happy to answer anything else, in English or Portuguese — sergio@theunfound.co
 ```
 Olá, e obrigado pela revisão.
 
-O theUnfound Theme 0.4.1 é um addon só de aparência: ele reestiliza as janelas do próprio
+O theUnfound Theme 0.4.2 é um addon só de aparência: ele reestiliza as janelas do próprio
 Thunderbird e não acrescenta nenhuma função, nenhuma conta e nenhum código de rede.
 O código-fonte completo, nesta exata versão, é público em
-https://github.com/SergioVago/theunfound-theme (tag v0.4.1). O .xpi é um zip simples do
+https://github.com/SergioVago/theunfound-theme (tag v0.4.2). O .xpi é um zip simples do
 diretório addon/ gerado por scripts/build.sh, mais o texto integral da licença MPL 2.0
 (LICENSE) na raiz do pacote — nada é minificado, empacotado, gerado ou obscurecido, então
 os arquivos do .xpi são byte a byte os do repositório.
@@ -231,6 +262,11 @@ os arquivos do .xpi são byte a byte os do repositório.
 Esta é a primeira submissão, sob um ID novo (theme@theunfound.com.br): não há base
 instalada anterior — ninguém recebe esta versão como atualização e não há caminho de
 migração a testar.
+
+O que a 0.4.2 muda desde a 0.4.1: o strict_max_version passa de "158.*" para "159.*" (ver
+6), e o sidebarDecorator.js recebe duas correções em torno do splitter do painel de
+pastas, ambas descritas em 2. As folhas de estilo mudaram só em comentários, e nenhum outro
+arquivo de addon/ mudou.
 
 1. POR QUE UMA EXPERIMENT API
 
@@ -276,8 +312,8 @@ privilegiado:
     desligamento atrasado de uma versão antiga não apague o visual da versão nova (está
     documentado no comentário do topo do arquivo, linhas 21-30).
 
-addon/skin/*.css (2.244 linhas em 7 arquivos: about3pane.css 851, aboutMessage.css 339,
-sidebar.css 573, messenger.css 194, tokens.css 136, compose.css 127,
+addon/skin/*.css (2.260 linhas em 7 arquivos: about3pane.css 851, aboutMessage.css 339,
+sidebar.css 589, messenger.css 194, tokens.css 136, compose.css 127,
 messageContent.css 24) — CSS puro, carregado como folha de autor. As únicas URLs ali são
 ícones data:image/svg+xml embutidos e um @import url("tokens.css") relativo no topo de
 about3pane.css, aboutMessage.css, messenger.css e compose.css; nenhum @font-face, nenhum
@@ -290,10 +326,28 @@ desligamento. O texto da prévia é hdr.getStringProperty("preview") (linhas 276
 isto é, o resumo que o próprio Thunderbird já guarda no banco de mensagens; o addon nunca
 abre nem baixa corpo de mensagem.
 
-addon/content/sidebarDecorator.js (1.114 linhas) — monta o trilho de contas, guarda o
-estado recolhido em Services.xulStore (linhas 218 e 226, o mesmo lugar onde o Thunderbird
+addon/content/sidebarDecorator.js (1.309 linhas) — monta o trilho de contas, guarda o
+estado recolhido em Services.xulStore (linhas 241 e 249, o mesmo lugar onde o Thunderbird
 guarda o layout da janela) e escuta mudanças de pasta/não lidas por
-MailServices.mailSession.AddFolderListener (linha 1036, removido na linha 1083).
+MailServices.mailSession.AddFolderListener (linha 1231, removido na linha 1278).
+
+Com o trilho recolhido, ele também segura o #folderPaneSplitter do Thunderbird
+(holdFolderSplitter, linha 854). No modo trilho esse splitter mede o trilho de 60px, e o
+Thunderbird 159 o tornou operável pelo teclado (bug 2065288): com o trilho recolhido, Tab
+e uma seta gravariam 60px como largura do painel de pastas na própria entrada de xulstore
+do Thunderbird, e o painel voltaria estreito. Enquanto segura, o decorador põe o atributo
+"disabled" no splitter (o valor é o id da instância) e define nesse único elemento um
+acessor isDisabled próprio (linha 883), por cima do de PaneSplitter.prototype, que não é
+tocado: o getter responde que sim, e o setter só anota o que o restoreState() do
+Thunderbird pede. O releaseFolderSplitter (linha 903) apaga a propriedade própria e devolve
+o estado de "disabled" que o Thunderbird pediu. Ele roda quando o trilho expande e no
+detach() (linha 497), que o uninstall() (linha 1268) roda para cada aba decorada; então
+desativar o addon desfaz as duas coisas. O attach() limpa o que uma instância que não
+conseguiu se desfazer deixou no splitter (linhas 304-315). O decorador já sobrepunha
+folderTree.focus do mesmo jeito na 0.4.1, para o F6 chegar ao trilho (linha 446). A
+segunda correção: o restoreSplitterLock (linha 708) não grava mais uma largura inline no
+#folderPane quando o Thunderbird não tem trava de tamanho a refazer, o que deixava o painel
+expandido surdo ao splitter até a aba recarregar.
 
 addon/content/messageDecorator.js (221 linhas) — reorganiza o cabeçalho do about:message
 e, para o selo de remetente suspeito, lê o cabeçalho Authentication-Results da própria
@@ -344,12 +398,14 @@ terceiro está embutida, logo não há VENDORS.md / referência de biblioteca a 
 
 5. COMO TESTAR EM DOIS MINUTOS
 
-  1. Perfil novo, Thunderbird 140-158, qualquer conta (uma conta de pastas locais já
+  1. Perfil novo, Thunderbird 140-159, qualquer conta (uma conta de pastas locais já
      basta — não precisa baixar e-mail).
   2. Instale o .xpi. A interface muda na hora, sem reiniciar: painel de pastas e barra de
      áreas ficam grafite, a lista mostra avatares e a linha de prévia.
   3. Clique no botão de recolher no topo do painel de pastas: o painel vira um trilho
-     estreito com um círculo de foto/iniciais por conta. Clique de novo para expandir.
+     estreito com um círculo de foto/iniciais por conta, e o splitter do painel de pastas
+     fica desativado — nem o mouse nem, na 159, o Tab e as setas chegam a ele. Clique no
+     botão de novo para expandir.
   4. Opções do addon: troque o Tema para Claro/Escuro, desligue avatares ou a prévia —
      tudo aplica ao vivo. O botão "Usar cartões e 3 colunas" é o único controle que mexe
      em preferência do Thunderbird.
@@ -358,10 +414,17 @@ terceiro está embutida, logo não há VENDORS.md / referência de biblioteca a 
 
 6. SOBRE O strict_max_version
 
-browser_specific_settings.gecko.strict_max_version é "158.*" porque o Thunderbird exige
+browser_specific_settings.gecko.strict_max_version é "159.*" porque o Thunderbird exige
 versão máxima estrita de addon que usa Experiment API, e porque o addon lê o DOM interno do
 Thunderbird, que pode mudar entre versões maiores. Publicarei versão atualizada a cada
 lançamento novo do Thunderbird.
+
+A 0.4.2 o sobe de "158.*" depois de conferir o addon no Thunderbird 159.0: ele instala e
+fica ativo, nenhum dos seletores de que depende perdeu o alvo, os módulos do framework de
+WebExtension e de Experiments são byte a byte os da 158, e as capturas são visualmente
+iguais às da 158, tirando o texto do corpo da mensagem no escuro, que segue a paleta nova
+do próprio Thunderbird. A única diferença funcional que a conferência achou é o splitter
+operável pelo teclado tratado em 2.
 
 O validador da própria ATN, no upload da 0.4.0, devolveu 0 erros, 56 avisos e 1 notice. Os
 56 avisos eram todos a mesma mensagem, "Invalid nesting of selectors found": era
@@ -374,13 +437,14 @@ de forma, não de defeito. O único notice era o de strict_max_version "not requ
 respondido acima, e nada mais apareceu: nenhum MANIFEST_FIELD_PRIVILEGED, nenhum
 UNSUPPORTED_API, nenhum MISSING_DATA_COLLECTION_PERMISSIONS.
 
-A 0.4.1, que é a versão à sua frente, é esse mesmo CSS reescrito sem aninhamento: os 208
-sítios de aninhamento das oito folhas foram achatados trocando cada "&" pelo seletor do
-pai, expandindo as listas de pais. Nenhum :is() foi introduzido, e nenhum seletor efetivo e
-nenhuma declaração mudaram, então o addon tem exatamente a aparência que a 0.4.0 tinha.
-Como não sobrou um único seletor aninhado, aqueles 56 avisos não têm mais o que casar, e
-por isso o único achado que eu espero deste upload é o notice de strict_max_version. Mas
-ainda não subi a 0.4.1, então isso é o que a mudança implica, não algo que eu tenha medido.
+A 0.4.1 reescreveu esse mesmo CSS sem aninhamento: os 208 sítios de aninhamento das oito
+folhas foram achatados trocando cada "&" pelo seletor do pai, expandindo as listas de pais.
+Nenhum :is() foi introduzido, e nenhum seletor efetivo e nenhuma declaração mudaram, então
+o addon tem exatamente a aparência que a 0.4.0 tinha. A 0.4.2, que é a versão à sua frente,
+mantém esse CSS: nas folhas, ela só mexe em comentários. Como não sobrou um único seletor
+aninhado, aqueles 56 avisos não têm mais o que casar, e por isso o único achado que eu
+espero deste upload é o notice de strict_max_version. Mas ainda não subi a 0.4.1 nem a
+0.4.2, então isso é o que a mudança implica, não algo que eu tenha medido.
 
 Duas conferências sustentam a afirmação de que a reescrita não mudou nada. Nas oito folhas,
 a sequência ordenada de (at-rule, seletor, declarações) nos arquivos achatados é idêntica,
@@ -391,7 +455,7 @@ build aninhada e a achatada — essa cobre toda folha que as janelas de email ca
 são todas menos o options.css.
 
 Sobre validação, para você saber que também não me pegou de surpresa: o addons-linter
-público (a edição JS, v10), que o meu CI roda, dá saída diferente no pacote 0.4.1 que
+público (a edição JS, v10), que o meu CI roda, dá saída diferente no pacote 0.4.2 que
 você tem em mãos. Ele é ferramenta do Firefox e não conhece as Experiment APIs do
 Thunderbird; neste .xpi ele devolve MANIFEST_FIELD_PRIVILEGED em /experiment_apis
 ("privileged manifest fields are only allowed in privileged extensions"), quatro avisos
@@ -422,13 +486,13 @@ sergio@theunfound.com.br.
 ## Antes de colar, confira
 
 1. **A URL do repositório e a tag.** As notas citam
-   `https://github.com/SergioVago/theunfound-theme` e a tag `v0.4.1`: publique o
+   `https://github.com/SergioVago/theunfound-theme` e a tag `v0.4.2`: publique o
    repositório e crie a tag **antes** de enviar, senão o revisor
    bate em 404 e a submissão volta.
 2. **O `.xpi` enviado corresponde ao commit.** `scripts/build.sh` gera
    `dist/theunfound-theme.xpi` com `zip -X -9`, o que ajuda; rode o build a partir de uma
    árvore limpa (`git status` vazio).
-3. **As contagens e os números de linha.** Foram re-derivados da 0.4.1 neste worktree. Se
+3. **As contagens e os números de linha.** Foram re-derivados da 0.4.2 neste worktree. Se
    qualquer arquivo de `addon/` mudar antes da submissão, rode `wc -l` e `grep -n` outra
    vez — não ajuste de cabeça.
 4. **O host do `resource://` e os atributos de raiz batem com o código.** As notas dizem
@@ -438,8 +502,13 @@ sergio@theunfound.com.br.
 5. **Os screenshots.** Já foram regerados num perfil de teste limpo, com elenco fictício
    (`tools/seed-profile.js` / `seed-senders.js` / `seed-accounts.js`): são os 15 arquivos
    de `screenshots/`, sem nenhum endereço real. Foram tirados da 0.4.0 e valem para a
-   0.4.1 porque a reescrita do CSS não mudou aparência nenhuma; se você mexer no visual,
-   regere antes de enviar.
+   0.4.2 porque nem a 0.4.1 (a reescrita do CSS) nem a 0.4.2 (o teto 159 e as correções
+   do splitter; nas folhas, só comentários) mudaram aparência nenhuma; se você mexer no
+   visual, regere antes de enviar.
    Antes de enviar, confira que as imagens escolhidas para a listagem saíram desse lote
    (nenhuma de `screenshots/tmp/`, que é rascunho) e que nenhuma mostra endereço, nome de
    conta ou assunto de mensagem de verdade.
+6. **O resultado do validador da ATN.** A seção 6 diz o que se espera do upload ("só o
+   notice de strict_max_version") e avisa que isso não foi medido. Se o upload da 0.4.2
+   devolver o relatório do validador antes de você colar estas notas, troque a
+   expectativa pelo resultado real nas duas línguas, como foi feito com a 0.4.0.

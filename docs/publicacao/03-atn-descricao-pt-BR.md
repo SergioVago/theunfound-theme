@@ -90,7 +90,7 @@ COMPATIBILIDADE — LEIA ANTES DE INSTALAR
 O addon usa uma Experiment API, a única forma de aplicar estilo às janelas do próprio
 Thunderbird. Isso tem um preço: o Thunderbird exige uma versão máxima declarada, e
 versões maiores do Thunderbird podem mudar a interface por dentro. Esta versão declara
-compatibilidade com o Thunderbird 140 a 158. Quando sair a 159, o addon precisa de uma
+compatibilidade com o Thunderbird 140 a 159. Quando sair a 160, o addon precisa de uma
 atualização — se o visual sumir depois de atualizar o Thunderbird, é isso, e não um
 defeito do seu perfil.
 
