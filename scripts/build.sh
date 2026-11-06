@@ -21,7 +21,7 @@ if m.get("experiment_apis"):
     g = m.get("browser_specific_settings", {}).get("gecko", {})
     v = g.get("strict_max_version")
     if not v or v == "*":
-        sys.exit("manifest.json: experiment_apis exige browser_specific_settings.gecko.strict_max_version (ex.: \"158.*\")")
+        sys.exit("manifest.json: experiment_apis exige browser_specific_settings.gecko.strict_max_version (ex.: \"159.*\")")
 PY
 
 (cd addon && zip -q -r -X -9 "../$out" . -x '*.DS_Store' -x '*~')
