@@ -285,8 +285,17 @@
     const staleSplitter = doc.getElementById("folderPaneSplitter");
     if (staleSplitter) {
       delete staleSplitter.isDisabled;
+      // O que o Thunderbird queria para o splitter morreu com a instância (o
+      // valor só diz de quem era) e é refeito pela visão da aba: o
+      // restoreState() o desativa numa visão sintética. isSynthetic é quase,
+      // não exatamente, o que o restoreState() grava ao abrir a aba: a visão
+      // pode mudar depois sem que ele grave de novo.
       if (staleSplitter.getAttribute(SPLITTER_DISABLED)) {
-        staleSplitter.removeAttribute(SPLITTER_DISABLED);
+        if (win.gViewWrapper?.isSynthetic) {
+          staleSplitter.setAttribute(SPLITTER_DISABLED, "");
+        } else {
+          staleSplitter.removeAttribute(SPLITTER_DISABLED);
+        }
       }
     }
 
@@ -801,11 +810,12 @@
   // desativado numa visão sintética, ativado no resto. É o estado que o
   // splitter tem que ter quando o trilho expandir, e ele não pode apagar o
   // nosso enquanto o trilho estiver recolhido. Por isso, nesse intervalo, o
-  // isDisabled da instância só anota o que o Thunderbird quer (e, como o
-  // tree.focus do attach, sai ao soltar), e um observador repõe o atributo se
-  // outro código o tirar ou o deixar vazio, as formas que o Thunderbird grava.
-  // Um valor não vazio é de outra instância: o splitter segue desativado, e
-  // brigar por ele com o observador dela seria um laço sem fim de microtasks.
+  // isDisabled da instância responde sempre que sim e só anota o que o
+  // Thunderbird quer (e, como o tree.focus do attach, sai ao soltar), e um
+  // observador repõe o atributo se outro código o tirar ou o deixar vazio, as
+  // formas que o Thunderbird grava. Um valor não vazio é de outra instância:
+  // o splitter segue desativado, e brigar por ele com o observador dela seria
+  // um laço sem fim de microtasks.
   //
   // O disabled não encerra um redimensionamento já em andamento: no 159 o
   // keyup ou o blur o terminam sem olhar isDisabled e medem o painel naquele
@@ -844,9 +854,14 @@
     pane.splitterHold = hold;
     Object.defineProperty(splitter, "isDisabled", {
       configurable: true,
-      // O mesmo getter do pane-splitter: é ele que o splitter consulta.
+      // O pane-splitter consulta isDisabled no keydown, no mousedown e ao
+      // escolher o tabIndex. Enquanto o hold vale, a resposta é sim mesmo sem
+      // o atributo: entre alguém tirá-lo e o observador o repor (uma
+      // microtask depois), uma seta no mesmo task começaria um
+      // redimensionamento que o keyup termina sem olhar isDisabled. Numa
+      // instância que já saiu, é o getter do próprio pane-splitter.
       get() {
-        return this.hasAttribute(SPLITTER_DISABLED);
+        return (active && pane.splitterHold === hold) || this.hasAttribute(SPLITTER_DISABLED);
       },
       set: hold.set,
     });
