@@ -31,9 +31,10 @@ This is a first submission under a new add-on ID (theme@theunfound.com.br), so t
 existing installed base: nobody receives this version as an update, and there is no
 migration path to test.
 
-What 0.4.2 changes since 0.4.1: strict_max_version goes from "158.*" to "159.*" (see 6),
-and sidebarDecorator.js gets two fixes around the folder pane splitter, both described
-under 2. The stylesheets changed in comments only, and no other file in addon/ changed.
+What 0.4.2 changes since 0.4.1: manifest.json gets version 0.4.2 and strict_max_version
+"159.*" (was "158.*", see 6), and sidebarDecorator.js gets two fixes around the folder
+pane splitter, both described under 2. The stylesheets changed in comments only, and no
+other file in addon/ changed.
 
 1. WHY AN EXPERIMENT API
 
@@ -105,13 +106,14 @@ and the pane would reopen narrow. During the hold the decorator sets the splitte
 on that one element (line 883), over PaneSplitter.prototype's, which is left untouched:
 the getter answers true, and the setter only records what Thunderbird's restoreState()
 asks for. releaseFolderSplitter (line 903) deletes the own property and puts back the
-disabled state Thunderbird asked for. It runs when the rail expands and in detach() (line
-497), which uninstall() (line 1268) runs for every decorated tab, so disabling the add-on
-undoes both. attach() clears what an instance that failed to clean up left on the
-splitter (lines 304-315). The decorator already overrode folderTree.focus the same way in
-0.4.1, so that F6 reaches the rail (line 446). The second fix: restoreSplitterLock (line
-708) no longer writes an inline width on #folderPane when Thunderbird has no size lock to
-redo, which left the expanded pane deaf to its splitter until the tab reloaded.
+disabled state Thunderbird asked for. It runs when the rail expands (line 527) and in
+detach() (line 460; the call is at line 497), which uninstall() (line 1268) runs for every
+decorated tab, so disabling the add-on undoes both. attach() clears what an instance that
+failed to clean up left on the splitter (lines 304-315). The decorator already overrode
+folderTree.focus the same way in 0.4.1, so that F6 reaches the rail (line 446). The second
+fix: restoreSplitterLock (line 708) no longer writes an inline width on #folderPane when
+Thunderbird has no size lock to redo, which left the expanded pane deaf to its splitter
+until the tab reloaded.
 
 addon/content/messageDecorator.js (221 lines) — rearranges the about:message header and,
 for the suspicious-sender badge, reads the open message's own Authentication-Results
@@ -155,7 +157,7 @@ library is bundled, so there is no VENDORS.md / library reference to check.
     startup; getLayoutState() (lines 574-586) only reads those three prefs to show the
     button's state. The listing description states this explicitly.
   • Services.xulStore: one value, the rail's collapsed flag, next to Thunderbird's own
-    window-layout state (sidebarDecorator.js lines 218 and 226).
+    window-layout state (sidebarDecorator.js lines 241 and 249).
   • storage.local: the options, plus the per-account photo the user picks in the options
     page (stored as a data: URL; background.js's cleanPhotos(), line 18, rejects anything
     that is not data:image/png|jpeg|webp|gif;base64).
@@ -263,10 +265,10 @@ Esta é a primeira submissão, sob um ID novo (theme@theunfound.com.br): não h�
 instalada anterior — ninguém recebe esta versão como atualização e não há caminho de
 migração a testar.
 
-O que a 0.4.2 muda desde a 0.4.1: o strict_max_version passa de "158.*" para "159.*" (ver
-6), e o sidebarDecorator.js recebe duas correções em torno do splitter do painel de
-pastas, ambas descritas em 2. As folhas de estilo mudaram só em comentários, e nenhum outro
-arquivo de addon/ mudou.
+O que a 0.4.2 muda desde a 0.4.1: o manifest.json muda a version para 0.4.2 e o
+strict_max_version de "158.*" para "159.*" (ver 6), e o sidebarDecorator.js recebe duas
+correções em torno do splitter do painel de pastas, ambas descritas em 2. As folhas de
+estilo mudaram só em comentários, e nenhum outro arquivo de addon/ mudou.
 
 1. POR QUE UMA EXPERIMENT API
 
@@ -340,14 +342,15 @@ do Thunderbird, e o painel voltaria estreito. Enquanto segura, o decorador põe 
 acessor isDisabled próprio (linha 883), por cima do de PaneSplitter.prototype, que não é
 tocado: o getter responde que sim, e o setter só anota o que o restoreState() do
 Thunderbird pede. O releaseFolderSplitter (linha 903) apaga a propriedade própria e devolve
-o estado de "disabled" que o Thunderbird pediu. Ele roda quando o trilho expande e no
-detach() (linha 497), que o uninstall() (linha 1268) roda para cada aba decorada; então
-desativar o addon desfaz as duas coisas. O attach() limpa o que uma instância que não
-conseguiu se desfazer deixou no splitter (linhas 304-315). O decorador já sobrepunha
-folderTree.focus do mesmo jeito na 0.4.1, para o F6 chegar ao trilho (linha 446). A
-segunda correção: o restoreSplitterLock (linha 708) não grava mais uma largura inline no
-#folderPane quando o Thunderbird não tem trava de tamanho a refazer, o que deixava o painel
-expandido surdo ao splitter até a aba recarregar.
+o estado de "disabled" que o Thunderbird pediu. Ele roda quando o trilho expande (linha
+527) e no detach() (linha 460; a chamada está na linha 497), que o uninstall() (linha
+1268) roda para cada aba decorada; então desativar o addon desfaz as duas coisas. O
+attach() limpa o que uma instância que não conseguiu se desfazer deixou no splitter
+(linhas 304-315). O decorador já sobrepunha folderTree.focus do mesmo jeito na 0.4.1, para
+o F6 chegar ao trilho (linha 446). A segunda correção: o restoreSplitterLock (linha 708)
+não grava mais uma largura inline no #folderPane quando o Thunderbird não tem trava de
+tamanho a refazer, o que deixava o painel expandido surdo ao splitter até a aba
+recarregar.
 
 addon/content/messageDecorator.js (221 linhas) — reorganiza o cabeçalho do about:message
 e, para o selo de remetente suspeito, lê o cabeçalho Authentication-Results da própria
@@ -391,7 +394,7 @@ terceiro está embutida, logo não há VENDORS.md / referência de biblioteca a 
     na instalação nem no início; getLayoutState() (linhas 574-586) só lê essas três prefs
     para mostrar o estado do botão. A descrição da listagem diz isso explicitamente.
   • Services.xulStore: um valor, o estado recolhido do trilho, ao lado do próprio layout
-    de janela do Thunderbird (sidebarDecorator.js, linhas 218 e 226).
+    de janela do Thunderbird (sidebarDecorator.js, linhas 241 e 249).
   • storage.local: as opções, mais a foto por conta que o usuário escolher na página de
     opções (guardada como data: URL; o cleanPhotos() do background.js, linha 18, rejeita o
     que não for data:image/png|jpeg|webp|gif;base64).
